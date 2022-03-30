@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface ScoreRepository extends JpaRepository<Score,Integer> {
     Optional<Score> findByStudentId(Student student);
-    List<Score> findByCourseId(Student course);
+    Optional<Score> findByCourseId(Student course);
 
     @Query(value = "select max(id) from Score  ")
     Integer getMaxId();

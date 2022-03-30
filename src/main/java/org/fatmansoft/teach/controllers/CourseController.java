@@ -170,11 +170,6 @@ public class CourseController {
 
     //  学生个人简历页面
     //在系统在主界面内点击个人简历，后台准备个人简历所需要的各类数据组成的段落数据，在前端显示
-    @PostMapping("/getCourseIntroduceData")
-    @PreAuthorize(" hasRole('ADMIN')")
-    public DataResponse getCourseIntroduceData(@Valid @RequestBody DataRequest dataRequest) {
-        Map data = introduceService.getIntroduceDataMap();
-        return CommonMethod.getReturnData(data);  //返回前端个人简历数据
-    }
+
 
 }
