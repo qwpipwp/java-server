@@ -19,6 +19,6 @@ public interface ScoreRepository extends JpaRepository<Score,Integer> {
     @Query(value = "from Score where ?1='' or studentId like %?1% or courseId like %?1% ")
     List<Score> findScoreListByNumName(String numName);
 
-    @Query(value = "select * from score  where ?1='' or student_id like %?1% or course_id like %?1% ", nativeQuery = true)
+    @Query(value = "select * from score  where ?1='' or studentId like %?1% or courseId like %?1% ", nativeQuery = true)
     List<Score> findScoreListByNumNameNative(String numName);
 }
