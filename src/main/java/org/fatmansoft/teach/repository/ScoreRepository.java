@@ -2,6 +2,7 @@ package org.fatmansoft.teach.repository;
 
 import org.fatmansoft.teach.models.Score;
 import org.fatmansoft.teach.models.Student;
+import org.fatmansoft.teach.models.Course;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -11,7 +12,7 @@ import java.util.Optional;
 
 public interface ScoreRepository extends JpaRepository<Score,Integer> {
     Optional<Score> findByStudentId(Student student);
-    Optional<Score> findByCourseId(Student course);
+    Optional<Score> findByCourseId(Course course);
 
     @Query(value = "select max(id) from Score  ")
     Integer getMaxId();
