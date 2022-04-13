@@ -1,0 +1,243 @@
+uims:
+  menu:
+    - name: student
+      title: 学生管理
+    - name: course
+      title: 课程管理
+    - name: score
+      title: 成绩管理
+    - name: honor
+      title: 荣誉管理
+    - name: information
+      title: 基本信息管理
+  page:
+    - name: student #学生管理模块
+      type: table
+      title: 学生管理
+      showAdd: 1
+      item:
+        - type: text
+          prop: studentNum
+          label: 学号
+        - type: text
+          prop: studentName
+          label: 姓名
+        - type: text
+          prop: sex
+          label: 性别
+        - type: text
+          prop: age
+          label: 年龄
+        - type: text
+          prop: birthday
+          label: 出生日期
+        - type: link
+          prop: course
+          label: 选修课程
+        - type: opers
+          label: 操作
+          opers:
+            - name: edit
+            - name: delete
+      query:
+        - type: input
+          prop: numName
+          label: 请输入学号或姓名
+    - name: studentEdit  #学生管理模块的编辑页面
+      type: form
+      title: 学生信息
+      item:
+        - type: input
+          prop: studentNum
+          label: 学号
+        - type: input
+          prop: studentName
+          label: 姓名
+        - type: select
+          prop: sex
+          label: 性别
+          option:
+            - value: 1
+              label: 男
+            - value: 2
+              label: 女
+        - type: input
+          prop: age
+          label: 年龄
+        - type: date
+          prop: birthday
+          label: 出生日期
+    - name: course    #课程管理模块
+      type: table
+      title: 课程管理
+      showAdd: 1
+      item:
+        - type: text
+          prop: courseNum
+          label: 课程号
+        - type: text
+          prop: courseName
+          label: 课程名
+        - type: text
+          prop: credit
+          label: 学分
+        - type: text
+          prop: preCourse
+          label: 预选课
+        - type: opers
+          label: 操作
+          opers:
+            - name: edit
+            - name: delete
+      query:
+        - type: input
+          prop: numName
+          label: 请输入课程名或课程号
+    - name: courseEdit   #课程管理模块编辑页面
+      type: form
+      title: 课程信息
+      item:
+        - type: input
+          prop: courseNum
+          label: 课程号
+        - type: input
+          prop: courseName
+          label: 课程名
+        - type: input
+          prop: credit
+          label: 学分
+        - type: input
+          prop: preCourse
+          label: 预选课
+    - name: score   #成绩管理模块
+      type: table
+      title: 成绩管理
+      showAdd: 1
+      item:
+        - type: text
+          prop: studentNum
+          label: 学号
+        - type: text
+          prop: studentName
+          label: 姓名
+        - type: text
+          prop: courseNum
+          label: 课程号
+        - type: text
+          prop: courseName
+          label: 课程名
+        - type: text
+          prop: score
+          label: 成绩
+        - type: opers
+          label: 操作
+          opers:
+            - name: edit
+            - name: delete
+      query:
+        - type: input
+          prop: numName
+          label: 请输入学号或姓名
+    - name: scoreEdit   #成绩管理模块编辑页面
+      type: form
+      title: 成绩信息
+      item:
+        - type: input
+          prop: studentNum
+          label: 学号
+        - type: input
+          prop: studentName
+          label: 姓名
+        - type: input
+          prop: courseNum
+          label: 课程号
+        - type: input
+          prop: courseName
+          label: 课程名
+        - type: input
+          prop: score
+          label: 成绩
+    - name: honor   #成绩管理模块
+      type: table
+      title: 荣誉管理
+      showAdd: 1
+      item:
+        - type: text
+          prop: studentNum
+          label: 学号
+        - type: text
+          prop: studentName
+          label: 姓名
+        - type: text
+          prop: honor
+          label: 荣誉
+        - type: opers
+          label: 操作
+          opers:
+            - name: edit
+            - name: delete
+      query:
+        - type: input
+          prop: numName
+          label: 请输入学号或姓名
+    - name: honorEdit   #成绩管理模块编辑页面
+      type: form
+      title: 荣誉信息
+      item:
+        - type: input
+          prop: studentNum
+          label: 学号
+        - type: input
+          prop: studentName
+          label: 姓名
+        - type: input
+          prop: honor
+          label: 荣誉
+    - name: information   #信息管理模块
+      type: table
+      title: 基本信息管理
+      showAdd: 1
+      item:
+        - type: text
+          prop: studentNum
+          label: 学号
+        - type: text
+          prop: studentName
+          label: 姓名
+        - type: text
+          prop: telephoneNumber
+          label: 电话号码
+        - type: text
+          prop: preEnrolmentInformation
+          label: 入学前信息
+        - type: text
+          prop: social
+          label: 社会关系
+        - type: opers
+          label: 操作
+          opers:
+            - name: edit
+            - name: delete
+      query:
+        - type: input
+          prop: numName
+          label: 请输入学号或姓名
+    - name: informationEdit   #信息管理模块编辑页面
+      type: form
+      title: 基本信息编辑
+      item:
+        - type: input
+          prop: studentNum
+          label: 学号
+        - type: input
+          prop: studentName
+          label: 姓名
+        - type: input
+          prop: telephoneNumber
+          label: 电话号码
+        - type: input
+          prop: preEnrolmentInformation
+          label: 入学前信息
+        - type: input
+          prop: social
+          label: 社会关系
