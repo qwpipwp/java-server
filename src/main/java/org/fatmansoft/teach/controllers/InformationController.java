@@ -57,7 +57,6 @@ public class InformationController {
             m.put("studentName",s.getStudentName_information().getStudentName());
             m.put("telephoneNumber",s.getTelephoneNumber());
             m.put("preEnrolmentInformation",s.getPreEnrolmentInformation());
-            m.put("familyRelationships",s.getFamilyRelationships());
             m.put("social",s.getSocial());
             dataList.add(m);
         }
@@ -104,7 +103,6 @@ public class InformationController {
             form.put("studentName",s.getStudentName_information().getStudentName());
             form.put("telephoneNumber",s.getTelephoneNumber());
             form.put("preEnrolmentInformation",s.getPreEnrolmentInformation());
-            form.put("familyRelationships",s.getFamilyRelationships());
             form.put("social",s.getSocial());
         }
         return CommonMethod.getReturnData(form); //这里回传包含学生信息的Map对象
@@ -131,7 +129,6 @@ public class InformationController {
         String studentName = CommonMethod.getString(form,"studentName");
         Integer telephoneNumber = CommonMethod.getInteger(form,"telephoneNumber");
         String preEnrolmentInformation = CommonMethod.getString(form,"preEnrolmentInformation");
-        String familyRelationships = CommonMethod.getString(form,"familyRelationships");
         String social = CommonMethod.getString(form,"social");
         Optional<Student> studentId=  studentRepository.findByStudentNum(studentNum);
         Optional<Student> studentNa=  studentRepository.findByStudentName(studentName);
@@ -156,7 +153,6 @@ public class InformationController {
         }
         s.setTelephoneNumber(telephoneNumber);
         s.setPreEnrolmentInformation(preEnrolmentInformation);
-        s.setFamilyRelationships(familyRelationships);
         s.setSocial(social);
         informationRepository.save(s);  //新建和修改都调用save方法
         return CommonMethod.getReturnData(s.getId());  // 将记录的id返回前端

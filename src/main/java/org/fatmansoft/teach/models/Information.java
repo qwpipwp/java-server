@@ -22,8 +22,6 @@ public class Information {
 
     private String preEnrolmentInformation;
 
-    private String familyRelationships;
-
     private String social;
 
     public Integer getId() {
@@ -64,14 +62,6 @@ public class Information {
 
     public void setPreEnrolmentInformation(String preEnrolmentInformation) {
         this.preEnrolmentInformation = preEnrolmentInformation;
-    }
-
-    public String getFamilyRelationships() {
-        return familyRelationships;
-    }
-
-    public void setFamilyRelationships(String familyRelationships) {
-        this.familyRelationships = familyRelationships;
     }
 
     public String getSocial() {
