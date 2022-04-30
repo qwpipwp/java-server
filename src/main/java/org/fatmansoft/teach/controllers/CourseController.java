@@ -64,8 +64,8 @@ public class CourseController {
     @PostMapping("/courseInit")
     @PreAuthorize("hasRole('ADMIN')")
     public DataResponse courseInit(@Valid @RequestBody DataRequest dataRequest) {
-        Integer studentId = dataRequest.getInteger("studentId");
-        String studentName = dataRequest.getString("studentName");
+        Integer courseId = dataRequest.getInteger("courseId");
+        String courseName = dataRequest.getString("courseName");
         List dataList = getCourseMapList("");
         return CommonMethod.getReturnData(dataList);  //按照测试框架规范会送Map的list
     }

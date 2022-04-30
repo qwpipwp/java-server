@@ -75,7 +75,7 @@ public class HonorController {
     @PostMapping("/honorQuery")
     @PreAuthorize("hasRole('ADMIN')")
     public DataResponse honorQuery(@Valid @RequestBody DataRequest dataRequest) {
-        String studentId= dataRequest.getString("studentId");
+        String studentId= dataRequest.getString("numName");
         List dataList = getHonorMapList(studentId);
         return CommonMethod.getReturnData(dataList);  //按照测试框架规范会送Map的list
     }

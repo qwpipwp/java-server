@@ -277,7 +277,7 @@ uims:
       title: 家庭信息编辑
       item:
         - type: input
-          prop: studentId
+          prop: studentNum
           label: 学号
         - type: input
           prop: studentName

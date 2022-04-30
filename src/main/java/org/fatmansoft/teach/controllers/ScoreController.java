@@ -80,7 +80,7 @@ public class ScoreController {
     @PostMapping("/scoreQuery")
     @PreAuthorize("hasRole('ADMIN')")
     public DataResponse scoreQuery(@Valid @RequestBody DataRequest dataRequest) {
-        String studentId= dataRequest.getString("studentId");
+        String studentId= dataRequest.getString("numName");
         List dataList = getScoreMapList(studentId);
         return CommonMethod.getReturnData(dataList);  //按照测试框架规范会送Map的list
     }

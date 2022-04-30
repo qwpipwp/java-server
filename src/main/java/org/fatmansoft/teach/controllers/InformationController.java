@@ -75,7 +75,7 @@ public class InformationController {
     @PostMapping("/informationQuery")
     @PreAuthorize("hasRole('ADMIN')")
     public DataResponse informationQuery(@Valid @RequestBody DataRequest dataRequest) {
-        String studentId= dataRequest.getString("studentId");
+        String studentId= dataRequest.getString("numName");
         List dataList = getInformationMapList(studentId);
         return CommonMethod.getReturnData(dataList);  //按照测试框架规范会送Map的list
     }
