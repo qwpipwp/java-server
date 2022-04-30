@@ -1,6 +1,7 @@
 package org.fatmansoft.teach.repository;
 
 import org.fatmansoft.teach.models.Activity;
+import org.fatmansoft.teach.models.Honor;
 import org.fatmansoft.teach.models.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -11,8 +12,8 @@ import java.util.Optional;
 
 @Repository
 public interface ActivityRepository extends JpaRepository<Activity,Integer> {
-    Optional<Activity> findByActivityNum(String activityNum);
-    List<Activity> findByActivityName(String activityName);
+    Optional<Activity> findByStudentId(Student studentNum);
+    Optional<Activity> findByStudentName(Student studentName);
 
     @Query(value = "select max(id) from Activity  ")
     Integer getMaxId();

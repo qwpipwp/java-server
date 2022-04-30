@@ -1,18 +1,14 @@
 package org.fatmansoft.teach.controllers;
 import org.fatmansoft.teach.models.Activity;
-import org.fatmansoft.teach.models.Score;
 import org.fatmansoft.teach.models.Student;
-import org.fatmansoft.teach.models.Course;
 import org.fatmansoft.teach.payload.request.DataRequest;
 import org.fatmansoft.teach.payload.response.DataResponse;
 import org.fatmansoft.teach.repository.ActivityRepository;
 import org.fatmansoft.teach.repository.StudentRepository;
-import org.fatmansoft.teach.repository.CourseRepository;
 import org.fatmansoft.teach.service.IntroduceService;
 import org.fatmansoft.teach.util.CommonMethod;
 import org.fatmansoft.teach.util.DateTimeTool;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,8 +52,8 @@ public class ActivityController {
             s = sList.get(i);
             m = new HashMap();
             m.put("id", s.getId());
-            m.put("studentNum",s.getStudent().getStudentNum());
-            m.put("studentName",s.getStudent().getStudentName());
+            m.put("studentNum",s.getStudentId_activity().getStudentNum());
+            m.put("studentName",s.getStudentName_activity().getStudentName());
             m.put("activityNum",s.getActivityNum());
             m.put("activityName",s.getActivityName());
             
@@ -107,8 +103,8 @@ public class ActivityController {
         Map form = new HashMap();
         if(s != null) {
             form.put("id",s.getId());
-            form.put("studentNum",s.getStudent().getStudentNum());
-            form.put("studentName",s.getStudent().getStudentName());
+            form.put("studentNum",s.getStudentId_activity().getStudentNum());
+            form.put("studentName",s.getStudentName_activity().getStudentName());
             form.put("activityNum",s.getActivityNum());
             form.put("activityName",s.getActivityName());
             form.put("dates",DateTimeTool.parseDateTime(s.getDates(),"yyyy-MM-dd"));
@@ -120,7 +116,7 @@ public class ActivityController {
     //相应提交请求的方法，前端把所有数据打包成一个Json对象作为参数传回后端，后端直接可以获得对应的Map对象form, 再从form里取出所有属性，复制到
     //实体对象里，保存到数据库里即可，如果是添加一条记录， id 为空，这是先 new Student 计算新的id， 复制相关属性，保存，如果是编辑原来的信息，
     //id 不为空。则查询出实体对象，复制相关属性，保存后修改数据库信息，永久修改
-    public synchronized Integer getNewStudentId(){
+    public synchronized Integer getNewActivityId(){
         Integer
                 id = activityRepository.getMaxId();  // 查询最大的id
         if(id == null)
@@ -134,12 +130,14 @@ public class ActivityController {
     public DataResponse activityEditSubmit(@Valid @RequestBody DataRequest dataRequest) {
         Map form = dataRequest.getMap("form"); //参数获取Map对象
         Integer id = CommonMethod.getInteger(form,"id");
-        String studentNum = CommonMethod.getString(form,"studentNum");  //Map 获取属性的值
+        String studentNum =CommonMethod.getString(form,"studentNum");  //Map 获取属性的值
+        String studentName = CommonMethod.getString(form,"studentName");  //Map 获取属性的值
         String activityNum = CommonMethod.getString(form,"activityNum");  //Map 获取属性的值
         String activityName = CommonMethod.getString(form,"activityName");
-       Date dates = CommonMethod.getDate(form,"dates");
+        Date dates = CommonMethod.getDate(form,"dates");
 
-        Optional<Student> student= studentRepository.findByStudentNum(studentNum);
+        Optional<Student> studentId=  studentRepository.findByStudentNum(studentNum);
+        Optional<Student> studentNa=  studentRepository.findByStudentName(studentName);
 
         Activity s= null;
         Optional<Activity> op;
@@ -151,14 +149,17 @@ public class ActivityController {
         }
         if(s == null) {
             s = new Activity();   //不存在 创建实体对象
-            id = s.getId(); //获取鑫的主键，这个是线程同步问题;
+            id = getNewActivityId(); //获取鑫的主键，这个是线程同步问题;
             s.setId(id);  //设置新的id
         }
         s.setActivityNum(activityNum);  //设置属性
         s.setActivityName(activityName);  //设置属性
-        if(student.isPresent()) {
-            s.setStudent(student.get());
+        if(studentId.isPresent()) {
+            s.setStudentId_activity(studentId.get());
         }//设置属性
+        if(studentNa.isPresent()) {
+            s.setStudentName_activity(studentNa.get());
+        }
 
         s.setDates(dates);
         activityRepository.save(s);  //新建和修改都调用save方法
@@ -183,15 +184,6 @@ public class ActivityController {
             activityRepository.delete(s);    //数据库永久删除
         }
         return CommonMethod.getReturnMessageOK();  //通知前端操作正常
-    }
-
-    //  学生个人简历页面
-    //在系统在主界面内点击个人简历，后台准备个人简历所需要的各类数据组成的段落数据，在前端显示
-    @PostMapping("/getActivityIntroduceData")
-    @PreAuthorize(" hasRole('ADMIN')")
-    public DataResponse getActivityIntroduceData(@Valid @RequestBody DataRequest dataRequest) {
-        Map data = introduceService.getIntroduceDataMap();
-        return CommonMethod.getReturnData(data);  //返回前端个人简历数据
     }
 
 }

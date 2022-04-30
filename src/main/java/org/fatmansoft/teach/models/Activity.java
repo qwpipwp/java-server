@@ -5,7 +5,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.Date;
 import org.fatmansoft.teach.models.Student;
-
 @Entity
 @Table(	name = "activity",
         uniqueConstraints = {
@@ -18,20 +17,15 @@ public class Activity {
     private String activityNum;
     @ManyToOne
     @JoinColumn(name ="studentId")
-    private Student student;
+    private Student studentId;
+
+    @ManyToOne
+    @JoinColumn(name ="studentName")
+    private Student studentName;
 
     @Size(max = 50)
     private String activityName;
     private Date dates ;
-
-    public Student getStudent() {
-        return student;
-    }
-
-    public void setStudent(Student studentId) {
-        this.student = studentId;
-    }
-
 
     public Integer getId() {
         return id;
@@ -40,6 +34,23 @@ public class Activity {
     public void setId(Integer id) {
         this.id = id;
     }
+
+    public Student getStudentId_activity() {
+        return studentId;
+    }
+
+    public void setStudentId_activity(Student studentId) {
+        this.studentId = studentId;
+    }
+
+    public Student getStudentName_activity() {
+        return studentName;
+    }
+
+    public void setStudentName_activity(Student studentName) {
+        this.studentName = studentName;
+    }
+
 
     public String getActivityNum() {
         return activityNum;

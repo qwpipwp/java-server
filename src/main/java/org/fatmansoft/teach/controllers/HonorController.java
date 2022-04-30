@@ -172,8 +172,5 @@ public class HonorController {
         return CommonMethod.getReturnMessageOK();  //通知前端操作正常
     }
 
-    //  学生个人简历页面
-    //在系统在主界面内点击个人简历，后台准备个人简历所需要的各类数据组成的段落数据，在前端显示
-
 
 }
