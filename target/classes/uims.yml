@@ -277,7 +277,7 @@ uims:
       title: 家庭信息编辑
       item:
         - type: input
-          prop: studentNum
+          prop: studentId
           label: 学号
         - type: input
           prop: studentName
@@ -296,3 +296,45 @@ uims:
         - type: input
           prop: rel
           label: 关系
+    - name: activity    #活动管理模块
+      type: table
+      title: 活动管理
+      showAdd: 1
+      item:
+        - type: text
+          prop: courseNum
+          label: 课程号
+        - type: text
+          prop: courseName
+          label: 课程名
+        - type: text
+          prop: credit
+          label: 学分
+        - type: text
+          prop: preCourse
+          label: 预选课
+        - type: opers
+          label: 操作
+          opers:
+            - name: edit
+            - name: delete
+      query:
+        - type: input
+          prop: numName
+          label: 请输入课程名或课程号
+    - name: courseEdit   #活动管理模块编辑页面
+      type: form
+      title: 活动信息
+      item:
+        - type: input
+          prop: courseNum
+          label: 课程号
+        - type: input
+          prop: courseName
+          label: 课程名
+        - type: input
+          prop: credit
+          label: 学分
+        - type: input
+          prop: preCourse
+          label: 预选课

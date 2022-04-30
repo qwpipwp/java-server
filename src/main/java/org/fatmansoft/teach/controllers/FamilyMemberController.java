@@ -54,8 +54,8 @@ public class FamilyMemberController {
             s = sList.get(i);
             m = new HashMap();
             m.put("id", s.getId());
-            m.put("studentNum",s.getStudent().getStudentNum());
-            m.put("studentName",s.getStudent().getStudentName());
+            m.put("studentNum",s.getStudentId_fa().getStudentNum());
+            m.put("studentName",s.getStudentName_fa().getStudentName());
             m.put("name",s.getName());
             if("1".equals(s.getSex())) {    //数据库存的是编码，显示是名称
                 m.put("sex","男");
@@ -114,8 +114,8 @@ public class FamilyMemberController {
         Map form = new HashMap();
         if(s != null) {
             form.put("id",s.getId());
-            form.put("studentNum",s.getStudent().getStudentNum());
-            form.put("studentName",s.getStudent().getStudentName());
+            form.put("studentNum",s.getStudentId_fa().getStudentNum());
+            form.put("studentName",s.getStudentName_fa().getStudentName());
             form.put("name",s.getName());
             form.put("sex",s.getSex());
             form.put("rel",s.getRel());
@@ -142,10 +142,12 @@ public class FamilyMemberController {
         Map form = dataRequest.getMap("form"); //参数获取Map对象
         Integer id = CommonMethod.getInteger(form,"id");
         String studentNum =CommonMethod.getString(form,"studentNum");  //Map 获取属性的值
+        String studentName =CommonMethod.getString(form,"studentName");  //Map 获取属性的值
         String name = CommonMethod.getString(form,"name");
         String sex = CommonMethod.getString(form,"sex");
         String rel = CommonMethod.getString(form,"rel");
-        Optional<Student> student=  studentRepository.findByStudentNum(studentNum);
+        Optional<Student> studentId=  studentRepository.findByStudentNum(studentNum);
+        Optional<Student> studentNa=  studentRepository.findByStudentName(studentName);
         FamilyMember s= null;
         Optional<FamilyMember> op;
         if(id != null) {
@@ -159,9 +161,12 @@ public class FamilyMemberController {
             id = getNewFamilyMemberId(); //获取鑫的主键，这个是线程同步问题;
             s.setId(id);  //设置新的id
         }
-        if(student.isPresent()) {
-            s.setStudent(student.get());
+        if(studentId.isPresent()) {
+            s.setStudentId_fa(studentId.get());
         }//设置属性\
+        if(studentNa.isPresent()) {
+            s.setStudentName_fa(studentNa.get());
+        }
         s.setName(name);
         s.setSex(sex);
         s.setRel(rel);

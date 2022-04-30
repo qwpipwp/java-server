@@ -3,7 +3,7 @@ package org.fatmansoft.teach.models;
 import javax.persistence.*;
 
 @Entity
-@Table(	name = "family_member",
+@Table(	name = "familyMember",
         uniqueConstraints = {
         })
 public class FamilyMember {
@@ -11,7 +11,10 @@ public class FamilyMember {
     private Integer id;
     @ManyToOne
     @JoinColumn(name = "studentId")
-    private Student student;
+    private Student studentId;
+    @ManyToOne
+    @JoinColumn(name = "studentName")
+    private Student studentName;
 
     private String name;
     private String sex;
@@ -25,12 +28,20 @@ public class FamilyMember {
         this.id = id;
     }
 
-    public Student getStudent() {
-        return student;
+    public Student getStudentId_fa() {
+        return studentId;
     }
 
-    public void setStudent(Student student) {
-        this.student = student;
+    public void setStudentId_fa(Student studentId) {
+        this.studentId = studentId;
+    }
+
+    public Student getStudentName_fa() {
+        return studentName;
+    }
+
+    public void setStudentName_fa(Student studentName) {
+        this.studentName = studentName;
     }
 
     public String getName() {
