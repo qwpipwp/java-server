@@ -12,6 +12,8 @@ uims:
       title: 基本信息管理
     - name: familyMember
       title: 家庭信息管理
+    - name: activity
+      title: 活动信息管理
   page:
     - name: student #学生管理模块
       type: table
