@@ -14,6 +14,8 @@ uims:
       title: 家庭信息管理
     - name: activity
       title: 日常活动管理
+    - name: practice
+      title: 课外实践管理
   page:
     - name: student #学生管理模块
       type: table
@@ -346,3 +348,72 @@ uims:
         - type: date
           prop: dates
           label: 日期
+    - name: practice
+      type: table
+      title: 课外实践管理
+      showAdd: 1
+      item:
+        - type: text
+          prop: studentNum
+          label: 学号
+        - type: text
+          prop: studentName
+          label: 姓名
+        - type: text
+          prop: practiceNum
+          label: 实践编号
+        - type: text
+          prop: practiceName
+          label: 实践名称
+        - type: text
+          prop: practiceKind
+          label: 实践种类
+        - type: text
+          prop: practiceDate
+          label: 实践日期
+        - type: opers
+          label: 操作
+          opers:
+            - name: edit
+            - name: delete
+      query:
+        - type: input
+          prop: numName
+          label: 请输入名称或序号
+    - name: practiceEdit
+      type: form
+      title: 实践信息
+      item:
+        - type: input
+          prop: studentNum
+          label: 学号
+        - type: input
+          prop: studentName
+          label: 姓名
+        - type: input
+          prop: practiceNum
+          label: 实践编号
+        - type: input
+          prop: practiceName
+          label: 实践名称
+        - type: select
+          prop: practiceKind
+          label: 实践种类
+          option:
+            - value: 1
+              label: 社会实践
+            - value: 2
+              label: 学科竞赛
+            - value: 3
+              label: 科研成果
+            - value: 4
+              label: 培训讲座
+            - value: 5
+              label: 创新创业
+            - value: 6
+              label: 校外实习
+            - value: 7
+              label: 其他
+        - type: date
+          prop: practiceDate
+          label: 实践日期
