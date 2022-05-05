@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface FamilyMemberRepository extends JpaRepository<FamilyMember,Integer> {
-    Optional<FamilyMember> findByStudentId(Student studentId);
-
     @Query(value = "select max(id) from FamilyMember  ")
     Integer getMaxId();
 

@@ -9,9 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface InformationRepository extends JpaRepository<Information,Integer> {
-    Optional<Information> findByStudentId(Student studentId);
-    Optional<Information> findByStudentName(Student studentName);
-
     @Query(value = "select max(id) from Information  ")
     Integer getMaxId();
 

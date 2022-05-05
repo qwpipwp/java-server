@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AttendenceRepository extends JpaRepository<Attendence,Integer> {
-    Optional<Attendence> findByStudentId(Student student);
-    Optional<Attendence> findByCourseId(Course course);
 
     @Query(value = "select max(id) from Attendence  ")
     Integer getMaxId();

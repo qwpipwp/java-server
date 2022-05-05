@@ -12,11 +12,11 @@ public class Score {
 
     @ManyToOne(targetEntity = Student.class)
     @JoinColumn(name="studentId")
-    private Student student;
+    private Student student;//与学生进行多对一联系
 
     @ManyToOne(targetEntity = Course.class)
     @JoinColumn(name="courseId")
-    private Course course;
+    private Course course;//与课程进行多对一联系
 
     private Double score;
 

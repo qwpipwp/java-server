@@ -10,8 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface PracticeRepository extends JpaRepository<Practice,Integer> {
-    Optional<Practice> findByPracticeNum(String practiceNum);
-    List<Practice> findByPracticeName(String practiceName);
 
     @Query(value = "select max(id) from Practice  ")
     Integer getMaxId();

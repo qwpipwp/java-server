@@ -12,8 +12,6 @@ import java.util.Optional;
 
 @Repository
 public interface ActivityRepository extends JpaRepository<Activity,Integer> {
-    Optional<Activity> findByStudentId(Student studentNum);
-    Optional<Activity> findByStudentName(Student studentName);
 
     @Query(value = "select max(id) from Activity  ")
     Integer getMaxId();

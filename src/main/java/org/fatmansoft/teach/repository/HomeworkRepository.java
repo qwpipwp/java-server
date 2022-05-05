@@ -11,9 +11,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface HomeworkRepository extends JpaRepository<Homework,Integer> {
-    Optional<Homework> findByStudentId(Student student);
-    Optional<Homework> findByCourseId(Course course);
-
     @Query(value = "select max(id) from Homework  ")
     Integer getMaxId();
 
