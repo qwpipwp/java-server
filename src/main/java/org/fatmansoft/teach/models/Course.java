@@ -1,15 +1,16 @@
 package org.fatmansoft.teach.models;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.Set;
 
 @Entity
 @Table(	name = "course",
         uniqueConstraints = {
         })
+
+
 public class Course {
     @Id
     private Integer id;
@@ -23,6 +24,13 @@ public class Course {
     @Size(max = 50)
     private String preCourse;
 
+    @ManyToMany
+    @JoinTable(
+            name = "selections",
+            joinColumns = @JoinColumn(name = "student_id"),
+            inverseJoinColumns = @JoinColumn(name = "course_id")
+    )
+    Set<Student> students;
     public Integer getId() {
         return id;
     }
@@ -61,5 +69,9 @@ public class Course {
 
     public void setPreCourse(String preCourse) {
         this.preCourse = preCourse;
+    }
+
+    public void addStudent(Student students){
+        this.students.add(students);
     }
 }

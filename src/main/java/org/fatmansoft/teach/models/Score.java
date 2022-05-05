@@ -10,14 +10,15 @@ public class Score {
     @Id
     private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name ="studentId")
-    private Student studentId;
+    @ManyToOne(targetEntity = Student.class)
+    @JoinColumn(name="studentId")
+    private Student student;
 
-    @ManyToOne
-    @JoinColumn(name ="courseId")
-    private Course courseId;
-    private Integer score;
+    @ManyToOne(targetEntity = Course.class)
+    @JoinColumn(name="courseId")
+    private Course course;
+
+    private Double score;
 
     public Integer getId() {
         return id;
@@ -28,26 +29,26 @@ public class Score {
     }
 
     public Student getStudent() {
-        return studentId;
+        return student;
     }
 
-    public void setStudent(Student studentId) {
-        this.studentId = studentId;
+    public void setStudent(Student student) {
+        this.student = student;
     }
 
     public Course getCourse() {
-        return courseId;
+        return course;
     }
 
-    public void setCourse(Course courseId) {
-        this.courseId = courseId;
+    public void setCourse(Course course) {
+        this.course = course;
     }
 
-    public Integer getScore() {
+    public Double getScore() {
         return score;
     }
 
-    public void setScore(Integer score) {
+    public void setScore(Double score) {
         this.score = score;
     }
 }

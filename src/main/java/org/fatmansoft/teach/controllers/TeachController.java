@@ -59,7 +59,6 @@ public class TeachController {
                 m.put("sex","女");
             }
             m.put("age",s.getAge());
-            m.put("dept",s.getDept());
             m.put("birthday", DateTimeTool.parseDateTime(s.getBirthday(),"yyyy-MM-dd"));  //时间格式转换字符串
             courseParas = "model=course&studentId=" + s.getId()+"&studentName="+ s.getStudentName();
             m.put("course","所学课程");

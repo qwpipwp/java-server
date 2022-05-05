@@ -1,14 +1,14 @@
 package org.fatmansoft.teach.controllers;
 
+
+import org.fatmansoft.teach.models.Course;
 import org.fatmansoft.teach.models.Score;
 import org.fatmansoft.teach.models.Student;
-import org.fatmansoft.teach.models.Course;
 import org.fatmansoft.teach.payload.request.DataRequest;
 import org.fatmansoft.teach.payload.response.DataResponse;
+import org.fatmansoft.teach.repository.CourseRepository;
 import org.fatmansoft.teach.repository.ScoreRepository;
 import org.fatmansoft.teach.repository.StudentRepository;
-import org.fatmansoft.teach.repository.CourseRepository;
-import org.fatmansoft.teach.service.IntroduceService;
 import org.fatmansoft.teach.util.CommonMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,170 +17,165 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.*;
 
-
-
-// origins： 允许可访问的域列表
-// maxAge:准备响应前的缓存持续的最大时间（以秒为单位）。
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/teach")
-
-
 public class ScoreController {
-    //Java 对象的注入 我们定义的这下Java的操作对象都不能自己管理是由有Spring框架来管理的， TeachController 中要使用StudentRepository接口的实现类对象，
-    // 需要下列方式注入，否则无法使用， studentRepository 相当于StudentRepository接口实现对象的一个引用，由框架完成对这个引用的复制，
-    // TeachController中的方法可以直接使用
-    @Autowired
-    private IntroduceService introduceService;
     @Autowired
     private ScoreRepository scoreRepository;
     @Autowired
     private StudentRepository studentRepository;
     @Autowired
-    private CourseRepository courseRepository;
+    private CourseRepository courseRepository;//添加依赖
 
-
-    //getStudentMapList 查询所有学号或姓名与numName相匹配的学生信息，并转换成Map的数据格式存放到List
-    //
-    // Map 对象是存储数据的集合类，框架会自动将Map转换程用于前后台传输数据的Json对象，Map的嵌套结构和Json的嵌套结构类似，
-    //下面方法是生成前端Table数据的示例，List的每一个Map对用显示表中一行的数据
-    //Map 每个键值对，对应每一个列的值，如m.put("studentNum",s.getStudentNum())， studentNum这一列显示的是具体的学号的值
-    //按照我们测试框架的要求，每个表的主键都是id, 生成表数据是一定要用m.put("id", s.getId());将id传送前端，前端不显示，
-    //但在进入编辑页面是作为参数回传到后台.
-    public List getScoreMapList(String numName) {
-        List dataList = new ArrayList();
-        List<Score> sList = scoreRepository.findScoreListByNumName(numName);  //数据库查询操作
-        if(sList == null || sList.size() == 0)
-            return dataList;
-        Score s;
-        Map m;
-        for(int i = 0; i < sList.size();i++) {
-            s = sList.get(i);
-            m = new HashMap();
-            m.put("id", s.getId());
+    public ArrayList<HashMap<String,Object>> getScoreMapList(String numName)//收集数据以供前端页面展示
+    {
+        List<Score> scores = scoreRepository.findScoreListByNumName(numName);
+        ArrayList<HashMap<String,Object>> mapList = new ArrayList<>();
+        for(final Score s : scores)
+        {
+            final HashMap<String,Object> m = new HashMap<>();
+            m.put("id",s.getId());//从数据库中取值并添加到哈希表中，下同
             m.put("studentNum",s.getStudent().getStudentNum());
             m.put("studentName",s.getStudent().getStudentName());
             m.put("courseNum",s.getCourse().getCourseNum());
             m.put("courseName",s.getCourse().getCourseName());
             m.put("score",s.getScore());
-            dataList.add(m);
+            mapList.add(m);//添加到列表中
+
         }
-        return dataList;
-    }
-    //student页面初始化方法
-    //Table界面初始是请求列表的数据，这里缺省查出所有学生的信息，传递字符“”给方法getStudentMapList，返回所有学生数据，
-    @PostMapping("/scoreInit")
-    @PreAuthorize("hasRole('ADMIN')")
-    public DataResponse scoreInit(@Valid @RequestBody DataRequest dataRequest) {
-        List dataList = getScoreMapList("");
-        return CommonMethod.getReturnData(dataList);  //按照测试框架规范会送Map的list
-    }
-    //student页面点击查询按钮请求
-    //Table界面初始是请求列表的数据，从请求对象里获得前端界面输入的字符串，作为参数传递给方法getStudentMapList，返回所有学生数据，
-    @PostMapping("/scoreQuery")
-    @PreAuthorize("hasRole('ADMIN')")
-    public DataResponse scoreQuery(@Valid @RequestBody DataRequest dataRequest) {
-        String studentId= dataRequest.getString("numName");
-        List dataList = getScoreMapList(studentId);
-        return CommonMethod.getReturnData(dataList);  //按照测试框架规范会送Map的list
+        return mapList;//返回列表
     }
 
-    //studentEdit初始化方法
-    //studentEdit编辑页面进入时首先请求的一个方法， 如果是Edit,再前台会把对应要编辑的那个学生信息的id作为参数回传给后端，我们通过Integer id = dataRequest.getInteger("id")
-    //获得对应学生的id， 根据id从数据库中查出数据，存在Map对象里，并返回前端，如果是添加， 则前端没有id传回，Map 对象数据为空（界面上的数据也为空白）
-
-    @PostMapping("/scoreEditInit")
+    @PostMapping("/scoreInit")//成绩页面的初始化方法
     @PreAuthorize("hasRole('ADMIN')")
-    public DataResponse scoreEditInit(@Valid @RequestBody DataRequest dataRequest) {
-        Integer id = dataRequest.getInteger("id");
-        Score s= null;
+    public DataResponse scoreInit(@Valid @RequestBody DataRequest dataRequest)
+    {
+        String studentName = dataRequest.getString("studentName");//以studentName为key值检索score数据库中所有相关数据
+        if(studentName == null)
+        {
+            studentName = "";//为空时传递空串，以显示数据库中所有数据
+        }
+        List<HashMap<String,Object>> mapList = getScoreMapList(studentName);
+        return CommonMethod.getReturnData(mapList);//返回数据
+    }
+
+    @PostMapping("/scoreQuery")//查询功能实现
+    @PreAuthorize("hasRole('ADMIN')")
+    public DataResponse scoreQuery(@Valid@RequestBody DataRequest dataRequest)
+    {
+        String numName = dataRequest.getString("numName");//获取从前端返回的查询值
+        List<HashMap<String,Object>> mapList = getScoreMapList(numName);//使用接口功能查询数据库，将数据存到list中
+        return CommonMethod.getReturnData(mapList);//返回查询到的数据
+    }
+
+    @PostMapping("/scoreEditInit")//编辑页面初始化功能
+    @PreAuthorize("hasRole('ADMIN')")
+    public DataResponse scoreEditInit(@Valid@RequestBody DataRequest dataRequest)
+    {
+        Integer id = dataRequest.getInteger("id");//从数据库中取出id值
+        Score sc= null;
+        Student s;
+        Course c;
         Optional<Score> op;
         if(id != null) {
-            op= scoreRepository.findById(id);
-            if(op.isPresent()) {
-                s = op.get();
+            op= scoreRepository.findById(id);//通过接口寻找id值作为key值对应的数据，以便接下来的编辑操作
+            if(op.isPresent()) {//确认id对应数据是否存在，提高程序的鲁棒性
+                sc = op.get();
             }
         }
-        Map form = new HashMap();
-        if(s != null) {
-            form.put("id",s.getId());
-            form.put("studentNum",s.getStudent().getStudentNum());
-            form.put("studentName",s.getStudent().getStudentName());
-            form.put("courseNum",s.getCourse().getCourseNum());
-            form.put("courseName",s.getCourse().getCourseName());
-            form.put("score",s.getScore());
+        //动态生成选择列表
+        Map m;
+        int i;
+        List studentIdList = new ArrayList();
+        List<Student> sList = studentRepository.findAll();//生成全体学生列表
+        for(i = 0; i <sList.size();i++) {
+            s =sList.get(i);
+            m = new HashMap();
+            m.put("label",s.getStudentName());
+            m.put("value",s.getId());
+            studentIdList.add(m);
+        }//进行遍历以获取每个学生的姓名和id以便前端展示
+        List courseIdList = new ArrayList();
+        List<Course> cList = courseRepository.findAll();
+        for(i = 0; i <cList.size();i++) {
+            c =cList.get(i);
+            m = new HashMap();
+            m.put("label",c.getCourseName());
+            m.put("value",c.getId());
+            courseIdList.add(m);
+        }//同上，这次获取课程的名称和id
+        Map form = new HashMap();//创建哈希表储存编辑页面使用的数据
+        form.put("studentId","");
+        form.put("courseId","");
+        if(sc != null) {//当成绩类不为空时，进行数据的传递
+            form.put("id",sc.getId());//获取id值传入哈希表下同获取学生id课程的id和成绩
+            form.put("studentId",sc.getStudent().getId());
+            form.put("courseId",sc.getCourse().getId());
+            form.put("score",sc.getScore());
         }
-        return CommonMethod.getReturnData(form); //这里回传包含学生信息的Map对象
+        form.put("studentIdList",studentIdList);//添加学生的姓名和学号至编辑页面，下同添加课程号与课程名
+        form.put("courseIdList",courseIdList);
+        return CommonMethod.getReturnData(form);//返回编辑数据
     }
-    //  学生信息提交按钮方法
-    //相应提交请求的方法，前端把所有数据打包成一个Json对象作为参数传回后端，后端直接可以获得对应的Map对象form, 再从form里取出所有属性，复制到
-    //实体对象里，保存到数据库里即可，如果是添加一条记录， id 为空，这是先 new Student 计算新的id， 复制相关属性，保存，如果是编辑原来的信息，
-    //id 不为空。则查询出实体对象，复制相关属性，保存后修改数据库信息，永久修改
-    public synchronized Integer getNewScoreId(){
-        Integer
-                id = scoreRepository.getMaxId();  // 查询最大的id
-        if(id == null)
-            id = 1;
-        else
-            id = id+1;
-        return id;
-    };
-    @PostMapping("/scoreEditSubmit")
-    @PreAuthorize(" hasRole('ADMIN')")
-    public DataResponse scoreEditSubmit(@Valid @RequestBody DataRequest dataRequest) {
+
+    public synchronized Integer getNewScoreId() {
+        Integer id = scoreRepository.getMaxId();
+        return (id == null ? 1 : id + 1);
+    }//在添加新内容时进行score数据库中id的增加
+
+    @PostMapping("/scoreEditSubmit")//成绩信息提交实现方法
+    @PreAuthorize("hasRole('ADMIN')")
+    public DataResponse scoreEditSubmit(@Valid@RequestBody DataRequest dataRequest)
+    {
         Map form = dataRequest.getMap("form"); //参数获取Map对象
-        Integer id = CommonMethod.getInteger(form,"id");
-        String studentNum =CommonMethod.getString(form,"studentNum");  //Map 获取属性的值
-        String courseNum = CommonMethod.getString(form,"courseNum");
-        Integer score = CommonMethod.getInteger(form,"score");
-        Optional<Student> student=  studentRepository.findByStudentNum(studentNum);
-        Optional<Course> course=  courseRepository.findByCourseNum(courseNum);
-        Score s= null;
+        Integer id = CommonMethod.getInteger(form,"id");//获取key值id
+        Integer studentId = CommonMethod.getInteger(form,"studentId");//获取学生的id下同课程的id
+        Integer courseId = CommonMethod.getInteger(form,"courseId");
+        Double score = CommonMethod.getDouble(form,"score");//获取成绩
+        Score sc= null;
+        Student s = null;
+        Course c = null;
         Optional<Score> op;
         if(id != null) {
             op= scoreRepository.findById(id);  //查询对应数据库中主键为id的值的实体对象
             if(op.isPresent()) {
-                s = op.get();
+                sc = op.get();
             }
         }
-        if(s == null) {
-            s = new Score();   //不存在 创建实体对象
+        if(sc == null) {
+            sc = new Score();   //不存在 创建实体对象
             id = getNewScoreId(); //获取鑫的主键，这个是线程同步问题;
-            s.setId(id);  //设置新的id
+            sc.setId(id);  //设置新的id
         }
-        if(student.isPresent()) {
-            s.setStudent(student.get());
-        }//设置属性
-        if(course.isPresent()) {
-            s.setCourse(course.get());
-        }
-        s.setScore(score);
-        scoreRepository.save(s);  //新建和修改都调用save方法
-        return CommonMethod.getReturnData(s.getId());  // 将记录的id返回前端
+        s = studentRepository.findById(studentId).get();//通过接口获取学生数据库中id值对应的相关数据，下同获取课程
+        c = courseRepository.findById(courseId).get();
+        sc.setStudent(s);  //设置属性
+        sc.setCourse(c);
+        sc.setScore(score);
+        scoreRepository.save(sc);//新建和修改都调用save方法
+        s.addCourse(c);//多对多的实现，将课程和学生建立联系，下同
+        c.addStudent(s);
+        studentRepository.save(s);
+        courseRepository.save(c);
+        return CommonMethod.getReturnData(s.getId());
     }
 
-    //  学生信息删除方法
-    //Student页面的列表里点击删除按钮则可以删除已经存在的学生信息， 前端会将该记录的id 回传到后端，方法从参数获取id，查出相关记录，调用delete方法删除
-    @PostMapping("/scoreDelete")
-    @PreAuthorize(" hasRole('ADMIN')")
-    public DataResponse scoreDelete(@Valid @RequestBody DataRequest dataRequest) {
-        Integer id = dataRequest.getInteger("id");  //获取id值
-        Score s= null;
-        Optional<Score> op;
-        if(id != null) {
-            op= scoreRepository.findById(id);   //查询获得实体对象
-            if(op.isPresent()) {
-                s = op.get();
+    @PostMapping("/scoreDelete")//数据的删除方法
+    @PreAuthorize("hasRole('ADMIN')")
+    public DataResponse scoreDelete(@Valid@RequestBody DataRequest dataRequest)
+    {
+        final Integer id = dataRequest.getInteger("id");//获取需要删除的数据的id值
+        if(id != null)//检索不为空的id值，提高程序稳定性
+        {
+            Optional<Score> op = scoreRepository.findById(id);//通过接口查找id对应的数据
+            if(op.isPresent())//检查数据是否为空，提高稳定性
+            {
+                final Score s = op.get();//设定常量获取数据
+                scoreRepository.delete(s);//调用接口删除方法删除数据
             }
         }
-        if(s != null) {
-            scoreRepository.delete(s);    //数据库永久删除
-        }
-        return CommonMethod.getReturnMessageOK();  //通知前端操作正常
+        return CommonMethod.getReturnMessageOK();//返回删除后的结果
     }
-
-    //  学生个人简历页面
-    //在系统在主界面内点击个人简历，后台准备个人简历所需要的各类数据组成的段落数据，在前端显示
-
 
 }
