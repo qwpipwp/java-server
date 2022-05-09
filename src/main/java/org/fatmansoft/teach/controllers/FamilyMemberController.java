@@ -55,7 +55,7 @@ public class FamilyMemberController {
             m = new HashMap();
             m.put("id", s.getId());
             m.put("studentNum",s.getStudentId_fa().getStudentNum());
-            m.put("studentName",s.getStudentName_fa().getStudentName());
+            m.put("studentName",s.getStudentId_fa().getStudentName());
             m.put("name",s.getName());
             if("1".equals(s.getSex())) {    //数据库存的是编码，显示是名称
                 m.put("sex","男");
@@ -115,7 +115,7 @@ public class FamilyMemberController {
         if(s != null) {
             form.put("id",s.getId());
             form.put("studentNum",s.getStudentId_fa().getStudentNum());
-            form.put("studentName",s.getStudentName_fa().getStudentName());
+            form.put("studentName",s.getStudentId_fa().getStudentName());
             form.put("name",s.getName());
             form.put("sex",s.getSex());
             form.put("rel",s.getRel());
@@ -165,7 +165,7 @@ public class FamilyMemberController {
             s.setStudentId_fa(studentId.get());
         }//设置属性\
         if(studentNa.isPresent()) {
-            s.setStudentName_fa(studentNa.get());
+            s.setStudentId_fa(studentNa.get());
         }
         s.setName(name);
         s.setSex(sex);
@@ -194,8 +194,6 @@ public class FamilyMemberController {
         return CommonMethod.getReturnMessageOK();  //通知前端操作正常
     }
 
-    //  学生个人简历页面
-    //在系统在主界面内点击个人简历，后台准备个人简历所需要的各类数据组成的段落数据，在前端显示
 
 
 }

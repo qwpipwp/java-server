@@ -15,13 +15,9 @@ public class Activity {
     @NotBlank
     @Size(max = 20)
     private String activityNum;
-    @ManyToOne
+    @ManyToOne(targetEntity = Student.class)
     @JoinColumn(name ="studentId")
-    private Student studentId;
-
-    @ManyToOne
-    @JoinColumn(name ="studentName")
-    private Student studentName;
+    private Student student;//与学生类建立多对一关系
 
     @Size(max = 50)
     private String activityName;
@@ -36,21 +32,12 @@ public class Activity {
     }
 
     public Student getStudentId_activity() {
-        return studentId;
+        return student;
     }
 
-    public void setStudentId_activity(Student studentId) {
-        this.studentId = studentId;
+    public void setStudentId_activity(Student student) {
+        this.student = student;
     }
-
-    public Student getStudentName_activity() {
-        return studentName;
-    }
-
-    public void setStudentName_activity(Student studentName) {
-        this.studentName = studentName;
-    }
-
 
     public String getActivityNum() {
         return activityNum;

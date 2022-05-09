@@ -30,7 +30,7 @@ public class Course {
             joinColumns = @JoinColumn(name = "student_id"),
             inverseJoinColumns = @JoinColumn(name = "course_id")
     )
-    Set<Student> students;
+    Set<Student> students;//与学生类建立多对多关系
     public Integer getId() {
         return id;
     }

@@ -10,13 +10,9 @@ public class Honor {
     @Id
     private Integer id;
 
-    @ManyToOne
+    @ManyToOne(targetEntity = Student.class)
     @JoinColumn(name ="studentId")
-    private Student studentId;
-
-    @ManyToOne
-    @JoinColumn(name ="studentName")
-    private Student studentName;
+    private Student student;//与学生类建立多对一关系
     private String honor;
 
     public Integer getId() {
@@ -28,19 +24,11 @@ public class Honor {
     }
 
     public Student getStudentId_honor() {
-        return studentId;
+        return student;
     }
 
-    public void setStudentId_honor(Student studentId) {
-        this.studentId = studentId;
-    }
-
-    public Student getStudentName_honor() {
-        return studentName;
-    }
-
-    public void setStudentName_honor(Student studentName) {
-        this.studentName = studentName;
+    public void setStudentId_honor(Student student) {
+        this.student = student;
     }
 
     public String getHonor() {

@@ -9,12 +9,9 @@ import javax.persistence.*;
 public class FamilyMember {
     @Id
     private Integer id;
-    @ManyToOne
+    @ManyToOne(targetEntity = Student.class)
     @JoinColumn(name = "studentId")
-    private Student studentId;
-    @ManyToOne
-    @JoinColumn(name = "studentName")
-    private Student studentName;
+    private Student student;//与学生类建立多对一关系
 
     private String name;
     private String sex;
@@ -29,19 +26,11 @@ public class FamilyMember {
     }
 
     public Student getStudentId_fa() {
-        return studentId;
+        return student;
     }
 
-    public void setStudentId_fa(Student studentId) {
-        this.studentId = studentId;
-    }
-
-    public Student getStudentName_fa() {
-        return studentName;
-    }
-
-    public void setStudentName_fa(Student studentName) {
-        this.studentName = studentName;
+    public void setStudentId_fa(Student student) {
+        this.student = student;
     }
 
     public String getName() {

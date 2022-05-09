@@ -56,7 +56,7 @@ public class HonorController {
             m = new HashMap();
             m.put("id", s.getId());
             m.put("studentNum",s.getStudentId_honor().getStudentNum());
-            m.put("studentName",s.getStudentName_honor().getStudentName());
+            m.put("studentName",s.getStudentId_honor().getStudentName());
             m.put("honor",s.getHonor());
             dataList.add(m);
         }
@@ -100,7 +100,7 @@ public class HonorController {
         if(s != null) {
             form.put("id",s.getId());
             form.put("studentNum",s.getStudentId_honor().getStudentNum());
-            form.put("studentName",s.getStudentName_honor().getStudentName());
+            form.put("studentName",s.getStudentId_honor().getStudentName());
             form.put("honor",s.getHonor());
         }
         return CommonMethod.getReturnData(form); //这里回传包含学生信息的Map对象
@@ -141,12 +141,7 @@ public class HonorController {
             id = getNewHonorId(); //获取鑫的主键，这个是线程同步问题;
             s.setId(id);  //设置新的id
         }
-        if(studentId.isPresent()) {
-            s.setStudentId_honor(studentId.get());
-        }//设置属性
-        if(studentNa.isPresent()) {
-            s.setStudentName_honor(studentNa.get());
-        }
+        s.setStudentId_honor(studentId.get());  //设置属性
         s.setHonor(honor);
         honorRepository.save(s);  //新建和修改都调用save方法
         return CommonMethod.getReturnData(s.getId());  // 将记录的id返回前端

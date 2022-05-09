@@ -13,10 +13,10 @@ public interface CourseRepository extends JpaRepository<Course,Integer> {
     List<Course> findByCourseName(String courseName);
 
     @Query(value = "select max(id) from Course  ")
-    Integer getMaxId();
+    Integer getMaxId();//获取最大id
 
     @Query(value = "from Course where ?1='' or courseNum like %?1% or courseName like %?1% ")
-    List<Course> findCourseListByNumName(String numName);
+    List<Course> findCourseListByNumName(String numName);//在课程数据库中以课程名，课号查找数据
 
     @Query(value = "select * from course  where ?1='' or courseNum like %?1% or courseName like %?1% ", nativeQuery = true)
     List<Course> findCourseListByNumNameNative(String numName);

@@ -12,10 +12,10 @@ public interface StudentRepository extends JpaRepository<Student,Integer> {
     Optional<Student> findByStudentName(String studentName);
 
     @Query(value = "select max(id) from Student  ")
-    Integer getMaxId();
+    Integer getMaxId();//获取最大id
 
     @Query(value = "from Student where ?1='' or studentNum like %?1% or studentName like %?1% ")
-    List<Student> findStudentListByNumName(String numName);
+    List<Student> findStudentListByNumName(String numName);//在学生数据库中以学号，姓名查找数据
 
     @Query(value = "select * from student  where ?1='' or studentNum like %?1% or studentName like %?1% ", nativeQuery = true)
     List<Student> findStudentListByNumNameNative(String numName);

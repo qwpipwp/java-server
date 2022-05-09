@@ -44,15 +44,15 @@ public class TeachController {
             return dataList;
         Student s;
         Map m;
-        String courseParas,studentNameParas;
+        String courseParas,studentNameParas,familyMemberParas;
         for(int i = 0; i < sList.size();i++) {
             s = sList.get(i);
             m = new HashMap();
             m.put("id", s.getId());
             m.put("studentNum",s.getStudentNum());
-            studentNameParas = "model=studentEdit&id=" + s.getId();
+            studentNameParas = "model=information&id=" + s.getId();
             m.put("studentName",s.getStudentName());
-            m.put("studentNameParas",studentNameParas);
+            m.put("studentNameParas",studentNameParas);//通过查询跳转页面至学生的基本信息页面
             if("1".equals(s.getSex())) {    //数据库存的是编码，显示是名称
                 m.put("sex","男");
             }else {
@@ -60,9 +60,12 @@ public class TeachController {
             }
             m.put("age",s.getAge());
             m.put("birthday", DateTimeTool.parseDateTime(s.getBirthday(),"yyyy-MM-dd"));  //时间格式转换字符串
-            courseParas = "model=course&studentId=" + s.getId()+"&studentName="+ s.getStudentName();
-            m.put("course","所学课程");
-            m.put("courseParas",courseParas);
+            courseParas = "model=score&studentId=" + s.getId()+"&studentName="+ s.getStudentName();
+            m.put("course","成绩情况");
+            m.put("courseParas",courseParas);//通过查询跳转页面至学生的成绩信息页面
+            familyMemberParas = "model=familyMember&studentId=" + s.getId()+"&studentName="+ s.getStudentName();
+            m.put("familyMember","家庭成员");
+            m.put("familyMemberParas",familyMemberParas);//通过查询跳转页面至学生的家庭成员页面
             dataList.add(m);
         }
         return dataList;

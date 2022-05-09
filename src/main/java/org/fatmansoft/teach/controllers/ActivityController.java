@@ -53,7 +53,7 @@ public class ActivityController {
             m = new HashMap();
             m.put("id", s.getId());
             m.put("studentNum",s.getStudentId_activity().getStudentNum());
-            m.put("studentName",s.getStudentName_activity().getStudentName());
+            m.put("studentName",s.getStudentId_activity().getStudentName());
             m.put("activityNum",s.getActivityNum());
             m.put("activityName",s.getActivityName());
             
@@ -104,7 +104,7 @@ public class ActivityController {
         if(s != null) {
             form.put("id",s.getId());
             form.put("studentNum",s.getStudentId_activity().getStudentNum());
-            form.put("studentName",s.getStudentName_activity().getStudentName());
+            form.put("studentName",s.getStudentId_activity().getStudentName());
             form.put("activityNum",s.getActivityNum());
             form.put("activityName",s.getActivityName());
             form.put("dates",DateTimeTool.parseDateTime(s.getDates(),"yyyy-MM-dd"));
@@ -158,7 +158,7 @@ public class ActivityController {
             s.setStudentId_activity(studentId.get());
         }//设置属性
         if(studentNa.isPresent()) {
-            s.setStudentName_activity(studentNa.get());
+            s.setStudentId_activity(studentNa.get());
         }
 
         s.setDates(dates);

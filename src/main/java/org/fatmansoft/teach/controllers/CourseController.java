@@ -37,7 +37,7 @@ public class CourseController {
     //
     // Map 对象是存储数据的集合类，框架会自动将Map转换程用于前后台传输数据的Json对象，Map的嵌套结构和Json的嵌套结构类似，
     //下面方法是生成前端Table数据的示例，List的每一个Map对用显示表中一行的数据
-    //Map 每个键值对，对应每一个列的值，如m.put("studentNum",s.getStudentNum())， studentNum这一列显示的是具体的学号的值
+    //Map 每个键值对，对应每一个列的值，如m.put("courseNum",s.getCourseNum())， courseNum这一列显示的是具体的学号的值
     //按照我们测试框架的要求，每个表的主键都是id, 生成表数据是一定要用m.put("id", s.getId());将id传送前端，前端不显示，
     //但在进入编辑页面是作为参数回传到后台.
     public List getCourseMapList(String numName) {
@@ -47,19 +47,25 @@ public class CourseController {
             return dataList;
         Course s;
         Map m;
+        String courseNameParas,attendenceParas;
         for(int i = 0; i < sList.size();i++) {
             s = sList.get(i);
             m = new HashMap();
             m.put("id", s.getId());
             m.put("courseNum",s.getCourseNum());
             m.put("courseName",s.getCourseName());
+            courseNameParas = "model=homework&courseId=" + s.getId()+"&courseName="+ s.getCourseName();
+            m.put("courseNameParas",courseNameParas);
             m.put("credit",s.getCredit());
             m.put("precourse",s.getPreCourse());
+            attendenceParas = "model=attendence&courseId=" + s.getId()+"&courseName="+ s.getCourseName();
+            m.put("attendence","出勤情况");
+            m.put("attendenceParas",attendenceParas);
             dataList.add(m);
         }
         return dataList;
     }
-    //student页面初始化方法
+    //course页面初始化方法
     //Table界面初始是请求列表的数据，这里缺省查出所有学生的信息，传递字符“”给方法getStudentMapList，返回所有学生数据，
     @PostMapping("/courseInit")
     @PreAuthorize("hasRole('ADMIN')")
@@ -69,7 +75,7 @@ public class CourseController {
         List dataList = getCourseMapList("");
         return CommonMethod.getReturnData(dataList);  //按照测试框架规范会送Map的list
     }
-    //student页面点击查询按钮请求
+    //course页面点击查询按钮请求
     //Table界面初始是请求列表的数据，从请求对象里获得前端界面输入的字符串，作为参数传递给方法getStudentMapList，返回所有学生数据，
     @PostMapping("/courseQuery")
     @PreAuthorize("hasRole('ADMIN')")
@@ -79,8 +85,8 @@ public class CourseController {
         return CommonMethod.getReturnData(dataList);  //按照测试框架规范会送Map的list
     }
 
-    //studentEdit初始化方法
-    //studentEdit编辑页面进入时首先请求的一个方法， 如果是Edit,再前台会把对应要编辑的那个学生信息的id作为参数回传给后端，我们通过Integer id = dataRequest.getInteger("id")
+    //courseEdit初始化方法
+    //courseEdit编辑页面进入时首先请求的一个方法， 如果是Edit,再前台会把对应要编辑的那个学生信息的id作为参数回传给后端，我们通过Integer id = dataRequest.getInteger("id")
     //获得对应学生的id， 根据id从数据库中查出数据，存在Map对象里，并返回前端，如果是添加， 则前端没有id传回，Map 对象数据为空（界面上的数据也为空白）
 
     @PostMapping("/courseEditInit")
@@ -149,7 +155,7 @@ public class CourseController {
     }
 
     //  学生信息删除方法
-    //Student页面的列表里点击删除按钮则可以删除已经存在的学生信息， 前端会将该记录的id 回传到后端，方法从参数获取id，查出相关记录，调用delete方法删除
+    //course页面的列表里点击删除按钮则可以删除已经存在的学生信息， 前端会将该记录的id 回传到后端，方法从参数获取id，查出相关记录，调用delete方法删除
     @PostMapping("/courseDelete")
     @PreAuthorize(" hasRole('ADMIN')")
     public DataResponse courseDelete(@Valid @RequestBody DataRequest dataRequest) {
@@ -168,8 +174,6 @@ public class CourseController {
         return CommonMethod.getReturnMessageOK();  //通知前端操作正常
     }
 
-    //  学生个人简历页面
-    //在系统在主界面内点击个人简历，后台准备个人简历所需要的各类数据组成的段落数据，在前端显示
 
 
 }

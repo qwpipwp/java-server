@@ -54,7 +54,7 @@ public class InformationController {
             m = new HashMap();
             m.put("id", s.getId());
             m.put("studentNum",s.getStudentId_information().getStudentNum());
-            m.put("studentName",s.getStudentName_information().getStudentName());
+            m.put("studentName",s.getStudentId_information().getStudentName());
             m.put("telephoneNumber",s.getTelephoneNumber());
             m.put("preEnrolmentInformation",s.getPreEnrolmentInformation());
             m.put("social",s.getSocial());
@@ -100,7 +100,7 @@ public class InformationController {
         if(s != null) {
             form.put("id",s.getId());
             form.put("studentNum",s.getStudentId_information().getStudentNum());
-            form.put("studentName",s.getStudentName_information().getStudentName());
+            form.put("studentName",s.getStudentId_information().getStudentName());
             form.put("telephoneNumber",s.getTelephoneNumber());
             form.put("preEnrolmentInformation",s.getPreEnrolmentInformation());
             form.put("social",s.getSocial());
@@ -149,7 +149,7 @@ public class InformationController {
             s.setStudentId_information(studentId.get());
         }//设置属性
         if(studentNa.isPresent()) {
-            s.setStudentName_information(studentNa.get());
+            s.setStudentId_information(studentNa.get());
         }
         s.setTelephoneNumber(telephoneNumber);
         s.setPreEnrolmentInformation(preEnrolmentInformation);

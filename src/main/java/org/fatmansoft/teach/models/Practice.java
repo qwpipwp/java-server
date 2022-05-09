@@ -12,13 +12,9 @@ public class Practice {
     @Id
     private Integer id;
 
-    @ManyToOne
+    @ManyToOne(targetEntity = Student.class)
     @JoinColumn(name = "studentId")
-    private Student studentId;
-
-    @ManyToOne
-    @JoinColumn(name = "studentName")
-    private Student studentName;
+    private Student student;//与学生类建立多对一关系
 
     @NotBlank
     @Size(max = 20)
@@ -30,20 +26,13 @@ public class Practice {
     private String practiceKind;
 
     public Student getStudentId_practice() {
-        return studentId;
+        return student;
     }
 
-    public void setStudentId_practice(Student studentId) {
-        this.studentId = studentId;
+    public void setStudentId_practice(Student student) {
+        this.student = student;
     }
 
-    public Student getStudentName_practice() {
-        return studentName;
-    }
-
-    public void setStudentName_practice(Student studentName) {
-        this.studentName = studentName;
-    }
 
     public Integer getId() {
         return id;
@@ -84,5 +73,6 @@ public class Practice {
     public void setPracticeKind(String practiceKind) {
         this.practiceKind = practiceKind;
     }
+
 
 }

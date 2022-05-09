@@ -4,22 +4,12 @@ uims:
       title: 学生管理
     - name: course
       title: 课程管理
-    - name: score
-      title: 成绩管理
     - name: honor
       title: 荣誉管理
-    - name: information
-      title: 基本信息管理
-    - name: familyMember
-      title: 家庭信息管理
     - name: activity
       title: 日常活动管理
     - name: practice
       title: 课外实践管理
-    - name: attendence
-      title: 考勤信息管理
-    - name: homework
-      title: 作业信息管理
   page:
     - name: student #学生管理模块
       type: table
@@ -29,7 +19,7 @@ uims:
         - type: text
           prop: studentNum
           label: 学号
-        - type: text
+        - type: link
           prop: studentName
           label: 姓名
         - type: text
@@ -43,7 +33,10 @@ uims:
           label: 出生日期
         - type: link
           prop: course
-          label: 选修课程
+          label: 成绩情况
+        - type: link
+          prop: familyMember
+          label: 家庭成员
         - type: opers
           label: 操作
           opers:
@@ -85,7 +78,7 @@ uims:
         - type: text
           prop: courseNum
           label: 课程号
-        - type: text
+        - type: link
           prop: courseName
           label: 课程名
         - type: text
@@ -94,6 +87,9 @@ uims:
         - type: text
           prop: preCourse
           label: 预选课
+        - type: link
+          prop: attendence
+          label: 出勤情况
         - type: opers
           label: 操作
           opers:

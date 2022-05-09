@@ -26,13 +26,12 @@ public class PracticeController {
     @Autowired
     private PracticeRepository practiceRepository;
     @Autowired
-    private StudentRepository studentRepository;
+    private StudentRepository studentRepository;//添加依赖
 
 
     public List getPracticeMapList(String numName){
         List dataList = new ArrayList();
-        List<Practice> pList = practiceRepository.findPracticeListByNumName(numName);
-
+        List<Practice> pList = practiceRepository.findPracticeListByNumName(numName);//通过查询方法建立页面
         if(pList == null || pList.size() == 0)
             return dataList;
 
@@ -42,10 +41,10 @@ public class PracticeController {
             prac = pList.get(i);
             m = new HashMap();
             m.put("id", prac.getId());
-            m.put("studentNum",prac.getStudentId_practice().getStudentNum());
-            m.put("studentName",prac.getStudentName_practice().getStudentName());
-            m.put("practiceNum",prac.getPracticeNum());
-            m.put("practiceName",prac.getPracticeName());
+            m.put("studentNum",prac.getStudentId_practice().getStudentNum());//获取学号
+            m.put("studentName",prac.getStudentId_practice().getStudentName());//获取学生姓名
+            m.put("practiceNum",prac.getPracticeNum());//获取实践活动的编号
+            m.put("practiceName",prac.getPracticeName());//获取实践活动的名字
             if("1".equals(prac.getPracticeKind())) {
                 m.put("practiceKind","社会实践");
             }else if("2".equals(prac.getPracticeKind())) {
@@ -60,37 +59,36 @@ public class PracticeController {
                 m.put("practiceKind","校外实习");
             }else if("7".equals(prac.getPracticeKind())) {
                 m.put("practiceKind","其他");
-            }
-            m.put("practiceDate", DateTimeTool.parseDateTime(prac.getPracticeDate(),"yyyy-MM-dd"));
+            }//进行选择，确定实践活动的种类
+            m.put("practiceDate", DateTimeTool.parseDateTime(prac.getPracticeDate(),"yyyy-MM-dd"));//获取实践活动的日期
             dataList.add(m);
         }
-
         return dataList;
     }
 
-    @PostMapping("/practiceInit")
+    @PostMapping("/practiceInit")//活动页面的初始化
     @PreAuthorize("hasRole('ADMIN')")
     public DataResponse practiceInit(@Valid @RequestBody DataRequest dataRequest) {
-        List dataList = getPracticeMapList("");
+        List dataList = getPracticeMapList("");//传递空串以遍历出所有的数据
         return CommonMethod.getReturnData(dataList);
     }
 
-    @PostMapping("/practiceQuery")
+    @PostMapping("/practiceQuery")//活动页面的查询功能的实现
     @PreAuthorize("hasRole('ADMIN')")
     public DataResponse practiceQuery(@Valid @RequestBody DataRequest dataRequest) {
-        String numName= dataRequest.getString("numName");
+        String numName= dataRequest.getString("numName");//输入学生姓名或学生学号以查询内容
         List dataList = getPracticeMapList(numName);
         return CommonMethod.getReturnData(dataList);
     }
 
-    @PostMapping("/practiceEditInit")
+    @PostMapping("/practiceEditInit")//编辑页面的初始化
     @PreAuthorize("hasRole('ADMIN')")
     public DataResponse practiceEditInit(@Valid @RequestBody DataRequest dataRequest) {
-        Integer id = dataRequest.getInteger("id");
+        Integer id = dataRequest.getInteger("id");//获取key值id
         Practice p= null;
         Optional<Practice> op;
-        if(id != null) {
-            op= practiceRepository.findById(id);
+        if(id != null) {//添加条件提高稳定性
+            op= practiceRepository.findById(id);//找寻id相应的数据进行处理
             if(op.isPresent()) {
                 p = op.get();
             }
@@ -124,22 +122,22 @@ public class PracticeController {
         m = new HashMap();
         m.put("label","其他");
         m.put("value","7");
-        kindList.add(m);
+        kindList.add(m);//编辑页面的选项处理，每个储存的数据对应活动的一种种类
         Map form = new HashMap();
         if(p != null) {
-            form.put("id",p.getId());
-            form.put("studentNum",p.getStudentId_practice().getStudentNum());
-            form.put("studentName",p.getStudentName_practice().getStudentName());
-            form.put("practiceDate", DateTimeTool.parseDateTime(p.getPracticeDate(),"yyyy-MM-dd"));
-            form.put("practiceKind",p.getPracticeKind());
-            form.put("practiceName",p.getPracticeName());
-            form.put("practiceNum",p.getPracticeNum());
+            form.put("id",p.getId());//获取id
+            form.put("studentNum",p.getStudentId_practice().getStudentNum());//获取学号
+            form.put("studentName",p.getStudentId_practice().getStudentName());//获取学生姓名
+            form.put("practiceDate", DateTimeTool.parseDateTime(p.getPracticeDate(),"yyyy-MM-dd"));//获取活动的日期
+            form.put("practiceKind",p.getPracticeKind());//获取活动的种类
+            form.put("practiceName",p.getPracticeName());//获取活动的名称
+            form.put("practiceNum",p.getPracticeNum());//获取活动的序号
         }
-        form.put("kindList",kindList);
+        form.put("kindList",kindList);//获取种类
         return CommonMethod.getReturnData(form);
     }
 
-    public synchronized Integer getNewPracticeId(){
+    public synchronized Integer getNewPracticeId(){//获取新id
         Integer id = practiceRepository.getMaxId();
         if(id == null)
             id = 1;
@@ -148,22 +146,22 @@ public class PracticeController {
         return id;
     }
 
-    @PostMapping("/practiceEditSubmit")
+    @PostMapping("/practiceEditSubmit")//活动的存储
     @PreAuthorize(" hasRole('ADMIN')")
     public DataResponse practiceEditSubmit(@Valid @RequestBody DataRequest dataRequest) {
         Map form = dataRequest.getMap("form"); //参数获取Map对象
         Integer id = CommonMethod.getInteger(form,"id");
         String studentNum = CommonMethod.getString(form,"studentNum");  //Map 获取属性的值
-        String studentName = CommonMethod.getString(form,"studentName");
-        String practiceNum = CommonMethod.getString(form,"practiceNum");
-        String practiceName = CommonMethod.getString(form,"practiceName");
-        String practiceKind = CommonMethod.getString(form,"practiceKind");
-        Date practiceDate = CommonMethod.getDate(form,"practiceDate");
-        Optional<Student> studentId=  studentRepository.findByStudentNum(studentNum);
-        Optional<Student> studentNa=  studentRepository.findByStudentName(studentName);
+        String studentName = CommonMethod.getString(form,"studentName");//获取前端输入的学生姓名
+        String practiceNum = CommonMethod.getString(form,"practiceNum");//获取前端的活动序号
+        String practiceName = CommonMethod.getString(form,"practiceName");//获取前端输入的活动姓名
+        String practiceKind = CommonMethod.getString(form,"practiceKind");//获取前端选择的活动种类
+        Date practiceDate = CommonMethod.getDate(form,"practiceDate");//获取活动的日期
+        Optional<Student> studentId=  studentRepository.findByStudentNum(studentNum);//以Optional类型储存学生的学号
+        Optional<Student> studentNa=  studentRepository.findByStudentName(studentName);//以Optional类型储存学生姓名
         Practice p= null;
         Optional<Practice> op;
-        if(id != null) {
+        if(id != null) {//选项提高安全性
             op= practiceRepository.findById(id);
             if(op.isPresent()) {
                 p = op.get();
@@ -172,23 +170,23 @@ public class PracticeController {
         if(p == null) {
             p = new Practice();
             id = getNewPracticeId();
-            p.setId(id);
+            p.setId(id);//设置id
         }
         if(studentId.isPresent()) {
-            p.setStudentId_practice(studentId.get());
+            p.setStudentId_practice(studentId.get());//获取学生id
         }//设置属性\
         if(studentNa.isPresent()) {
-            p.setStudentName_practice(studentNa.get());
+            p.setStudentId_practice(studentNa.get());
         }
-        p.setPracticeNum(practiceNum);
-        p.setPracticeName(practiceName);
-        p.setPracticeKind(practiceKind);
-        p.setPracticeDate(practiceDate);
-        practiceRepository.save(p);
+        p.setPracticeNum(practiceNum);//获取活动序号
+        p.setPracticeName(practiceName);//获取活动名称
+        p.setPracticeKind(practiceKind);//获取活动种类
+        p.setPracticeDate(practiceDate);//获取活动日期
+        practiceRepository.save(p);//进行储存
         return CommonMethod.getReturnData(p.getId());
     }
 
-    @PostMapping("/practiceDelete")
+    @PostMapping("/practiceDelete")//数据删除方法实现
     @PreAuthorize(" hasRole('ADMIN')")
     public DataResponse practiceDelete(@Valid @RequestBody DataRequest dataRequest) {
         Integer id = dataRequest.getInteger("id");
@@ -197,20 +195,12 @@ public class PracticeController {
         if(id != null) {
             op= practiceRepository.findById(id);
             if(op.isPresent()) {
-                p = op.get();
+                p = op.get();//在保证id存在的情况下进行id的获取
             }
         }
         if(p != null) {
-            practiceRepository.delete(p);
+            practiceRepository.delete(p);//删除id对应的数据
         }
         return CommonMethod.getReturnMessageOK();
     }
-
-    @PostMapping("/getPracticeIntroduceData")
-    @PreAuthorize(" hasRole('ADMIN')")
-    public DataResponse getPracticeIntroduceData(@Valid @RequestBody DataRequest dataRequest) {
-        Map data = introduceService.getIntroduceDataMap();
-        return CommonMethod.getReturnData(data);
-    }
-
 }
