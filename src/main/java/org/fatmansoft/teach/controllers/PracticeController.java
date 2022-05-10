@@ -154,7 +154,7 @@ public class PracticeController {
         String studentNum = CommonMethod.getString(form,"studentNum");  //Map 获取属性的值
         String studentName = CommonMethod.getString(form,"studentName");//获取前端输入的学生姓名
         String practiceNum = CommonMethod.getString(form,"practiceNum");//获取前端的活动序号
-        String practiceName = CommonMethod.getString(form,"practiceName");//获取前端输入的活动姓名
+        String practiceName = CommonMethod.getString(form,"practiceName");//获取前端输入的活动名称
         String practiceKind = CommonMethod.getString(form,"practiceKind");//获取前端选择的活动种类
         Date practiceDate = CommonMethod.getDate(form,"practiceDate");//获取活动的日期
         Optional<Student> studentId=  studentRepository.findByStudentNum(studentNum);//以Optional类型储存学生的学号
@@ -162,14 +162,14 @@ public class PracticeController {
         Practice p= null;
         Optional<Practice> op;
         if(id != null) {//选项提高安全性
-            op= practiceRepository.findById(id);
+            op= practiceRepository.findById(id); //查询对应数据库中主键为id的值的实体对象
             if(op.isPresent()) {
                 p = op.get();
             }
         }
         if(p == null) {
-            p = new Practice();
-            id = getNewPracticeId();
+            p = new Practice();  //不存在 创建实体对象
+            id = getNewPracticeId();//获取鑫的主键，这个是线程同步问题;
             p.setId(id);//设置id
         }
         if(studentId.isPresent()) {
@@ -189,11 +189,11 @@ public class PracticeController {
     @PostMapping("/practiceDelete")//数据删除方法实现
     @PreAuthorize(" hasRole('ADMIN')")
     public DataResponse practiceDelete(@Valid @RequestBody DataRequest dataRequest) {
-        Integer id = dataRequest.getInteger("id");
+        Integer id = dataRequest.getInteger("id");//获取id值
         Practice p= null;
         Optional<Practice> op;
         if(id != null) {
-            op= practiceRepository.findById(id);
+            op= practiceRepository.findById(id); //查询获得实体对象
             if(op.isPresent()) {
                 p = op.get();//在保证id存在的情况下进行id的获取
             }

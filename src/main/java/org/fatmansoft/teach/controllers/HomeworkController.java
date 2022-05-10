@@ -37,14 +37,14 @@ public class HomeworkController {
     @Autowired
     private StudentRepository studentRepository;
     @Autowired
-    private CourseRepository courseRepository;
+    private CourseRepository courseRepository;//添加依赖
 
 
-    //getStudentMapList 查询所有学号或姓名与numName相匹配的学生信息，并转换成Map的数据格式存放到List
+    //getHomeworkMapList 查询所有学号或姓名与numName相匹配的学生信息，并转换成Map的数据格式存放到List
     //
     // Map 对象是存储数据的集合类，框架会自动将Map转换程用于前后台传输数据的Json对象，Map的嵌套结构和Json的嵌套结构类似，
     //下面方法是生成前端Table数据的示例，List的每一个Map对用显示表中一行的数据
-    //Map 每个键值对，对应每一个列的值，如m.put("studentNum",s.getStudentNum())， studentNum这一列显示的是具体的学号的值
+    //Map 每个键值对，对应每一个列的值，
     //按照我们测试框架的要求，每个表的主键都是id, 生成表数据是一定要用m.put("id", s.getId());将id传送前端，前端不显示，
     //但在进入编辑页面是作为参数回传到后台.
     public List getHomeworkMapList(String numName) {
@@ -58,29 +58,29 @@ public class HomeworkController {
             s = sList.get(i);
             m = new HashMap();
             m.put("id", s.getId());
-            m.put("studentNum",s.getStudent().getStudentNum());
-            m.put("studentName",s.getStudent().getStudentName());
-            m.put("courseNum",s.getCourse().getCourseNum());
-            m.put("courseName",s.getCourse().getCourseName());
-            m.put("homework",s.getHomework());
+            m.put("studentNum",s.getStudent().getStudentNum());//获取学号
+            m.put("studentName",s.getStudent().getStudentName());//获取学生姓名
+            m.put("courseNum",s.getCourse().getCourseNum());//获取课程号
+            m.put("courseName",s.getCourse().getCourseName());//获取课程名称
+            m.put("homework",s.getHomework());//获取作业
             if("1".equals(s.getHomeworkIsDone())){
                 m.put("homeworkIsDone","完成");
             }else
                 m.put("homeworkIsDone","未完成");
             dataList.add(m);
-        }
+        }//获取作业完成情况
         return dataList;
     }
-    //student页面初始化方法
-    //Table界面初始是请求列表的数据，这里缺省查出所有学生的信息，传递字符“”给方法getStudentMapList，返回所有学生数据，
+    //homework页面初始化方法
+    //Table界面初始是请求列表的数据，这里缺省查出所有学生的信息，传递字符“”给方法getHomeworkMapList，返回所有学生数据，
     @PostMapping("/homeworkInit")
     @PreAuthorize("hasRole('ADMIN')")
     public DataResponse homeworkInit(@Valid @RequestBody DataRequest dataRequest) {
-        List dataList = getHomeworkMapList("");
+        List dataList = getHomeworkMapList("");//传递空串以遍历出所有的数据
         return CommonMethod.getReturnData(dataList);  //按照测试框架规范会送Map的list
     }
-    //student页面点击查询按钮请求
-    //Table界面初始是请求列表的数据，从请求对象里获得前端界面输入的字符串，作为参数传递给方法getStudentMapList，返回所有学生数据，
+    //homework页面点击查询按钮请求
+    //Table界面初始是请求列表的数据，从请求对象里获得前端界面输入的字符串，作为参数传递给方法getHomeworkMapList，返回所有学生数据，
     @PostMapping("/homeworkQuery")
     @PreAuthorize("hasRole('ADMIN')")
     public DataResponse homeworkQuery(@Valid @RequestBody DataRequest  dataRequest) {
@@ -89,18 +89,18 @@ public class HomeworkController {
         return CommonMethod.getReturnData(dataList);  //按照测试框架规范会送Map的list
     }
 
-    //studentEdit初始化方法
-    //studentEdit编辑页面进入时首先请求的一个方法， 如果是Edit,再前台会把对应要编辑的那个学生信息的id作为参数回传给后端，我们通过Integer id = dataRequest.getInteger("id")
+    //homeworkEdit初始化方法
+    //homeworkEdit编辑页面进入时首先请求的一个方法， 如果是Edit,再前台会把对应要编辑的那个学生信息的id作为参数回传给后端，我们通过Integer id = dataRequest.getInteger("id")
     //获得对应学生的id， 根据id从数据库中查出数据，存在Map对象里，并返回前端，如果是添加， 则前端没有id传回，Map 对象数据为空（界面上的数据也为空白）
 
     @PostMapping("/homeworkEditInit")
     @PreAuthorize("hasRole('ADMIN')")
     public DataResponse homeworkEditInit(@Valid @RequestBody DataRequest dataRequest) {
-        Integer id = dataRequest.getInteger("id");
+        Integer id = dataRequest.getInteger("id");//获取key值id
         Homework s= null;
         Optional<Homework> op;
-        if(id != null) {
-            op= homeworkRepository.findById(id);
+        if(id != null) {//添加条件提高稳定性
+            op= homeworkRepository.findById(id);//找寻id相应的数据进行处理
             if(op.isPresent()) {
                 s = op.get();
             }
@@ -114,22 +114,22 @@ public class HomeworkController {
         m = new HashMap();
         m.put("label","未完成");
         m.put("value","2");
-        homeworkIsDoneList.add(m);
+        homeworkIsDoneList.add(m);//编辑页面的选项处理，每个储存的数据对应作业是否完成
         Map form = new HashMap();
         if(s != null) {
-            form.put("id",s.getId());
-            form.put("studentNum",s.getStudent().getStudentNum());
-            form.put("studentName",s.getStudent().getStudentName());
-            form.put("courseNum",s.getCourse().getCourseNum());
-            form.put("courseName",s.getCourse().getCourseName());
-            form.put("homework",s.getHomework());
+            form.put("id",s.getId());//获取id
+            form.put("studentNum",s.getStudent().getStudentNum());//获取学号
+            form.put("studentName",s.getStudent().getStudentName());//获取学生姓名
+            form.put("courseNum",s.getCourse().getCourseNum());//获取课程号
+            form.put("courseName",s.getCourse().getCourseName());//获取课程名称
+            form.put("homework",s.getHomework());//作业
         }
         form.put("homeworkIsDoneList",homeworkIsDoneList);
         return CommonMethod.getReturnData(form); //这里回传包含学生信息的Map对象
     }
-    //  学生信息提交按钮方法
+    //  信息提交按钮方法
     //相应提交请求的方法，前端把所有数据打包成一个Json对象作为参数传回后端，后端直接可以获得对应的Map对象form, 再从form里取出所有属性，复制到
-    //实体对象里，保存到数据库里即可，如果是添加一条记录， id 为空，这是先 new Student 计算新的id， 复制相关属性，保存，如果是编辑原来的信息，
+    //实体对象里，保存到数据库里即可，如果是添加一条记录， id 为空，这是先 new Homework 计算新的id， 复制相关属性，保存，如果是编辑原来的信息，
     //id 不为空。则查询出实体对象，复制相关属性，保存后修改数据库信息，永久修改
     public synchronized Integer getNewHomeworkId(){
         Integer
@@ -140,20 +140,20 @@ public class HomeworkController {
             id = id+1;
         return id;
     };
-    @PostMapping("/homeworkEditSubmit")
+    @PostMapping("/homeworkEditSubmit")//作业的存储
     @PreAuthorize(" hasRole('ADMIN')")
     public DataResponse homeworkEditSubmit(@Valid @RequestBody DataRequest dataRequest) {
         Map form = dataRequest.getMap("form"); //参数获取Map对象
         Integer id = CommonMethod.getInteger(form,"id");
         String studentNum =CommonMethod.getString(form,"studentNum");  //Map 获取属性的值
-        String courseNum = CommonMethod.getString(form,"courseNum");
-        String homework = CommonMethod.getString(form,"homework");
-        String homeworkIsDone = CommonMethod.getString(form,"homeworkIsDone");
-        Optional<Student> student=  studentRepository.findByStudentNum(studentNum);
-        Optional<Course> course=  courseRepository.findByCourseNum(courseNum);
+        String courseNum = CommonMethod.getString(form,"courseNum");//获取课程号
+        String homework = CommonMethod.getString(form,"homework");//获取作业信息
+        String homeworkIsDone = CommonMethod.getString(form,"homeworkIsDone");//获取作业完成情况
+        Optional<Student> student=  studentRepository.findByStudentNum(studentNum);//以Optional类型储存学生的学号
+        Optional<Course> course=  courseRepository.findByCourseNum(courseNum);//以Optional类型储存学生姓名
         Homework s= null;
         Optional<Homework> op;
-        if(id != null) {
+        if(id != null) {//选项提高安全性
             op= homeworkRepository.findById(id);  //查询对应数据库中主键为id的值的实体对象
             if(op.isPresent()) {
                 s = op.get();
@@ -170,8 +170,8 @@ public class HomeworkController {
         if(course.isPresent()) {
             s.setCourse(course.get());
         }
-        s.setHomework(homework);
-        s.setHomeworkIsDone(homeworkIsDone);
+        s.setHomework(homework);//获取作业信息
+        s.setHomeworkIsDone(homeworkIsDone);//获取作业完成情况
         homeworkRepository.save(s);  //新建和修改都调用save方法
         return CommonMethod.getReturnData(s.getId());  // 将记录的id返回前端
     }
@@ -187,7 +187,7 @@ public class HomeworkController {
         if(id != null) {
             op= homeworkRepository.findById(id);   //查询获得实体对象
             if(op.isPresent()) {
-                s = op.get();
+                s = op.get();//在保证id存在的情况下进行id的获取
             }
         }
         if(s != null) {
