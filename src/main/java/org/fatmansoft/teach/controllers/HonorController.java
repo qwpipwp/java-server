@@ -123,11 +123,8 @@ public class HonorController {
     public DataResponse honorEditSubmit(@Valid @RequestBody DataRequest dataRequest) {
         Map form = dataRequest.getMap("form"); //参数获取Map对象
         Integer id = CommonMethod.getInteger(form,"id");
-        String studentNum =CommonMethod.getString(form,"studentNum");  //Map 获取属性的值
-        String studentName = CommonMethod.getString(form,"studentName");//获取前端输入的学生姓名
+        Integer studentId = CommonMethod.getInteger(form,"studentId");//获取学生的id下同课程的id
         String honor = CommonMethod.getString(form,"honor");//获取荣誉
-        Optional<Student> studentId=  studentRepository.findByStudentNum(studentNum);//以Optional类型储存学生的学号
-        Optional<Student> studentNa=  studentRepository.findByStudentName(studentName);//以Optional类型储存学生姓名
         Honor s= null;
         Optional<Honor> op;
         if(id != null) {
@@ -141,7 +138,10 @@ public class HonorController {
             id = getNewHonorId(); //获取鑫的主键，这个是线程同步问题;
             s.setId(id);  //设置新的id
         }
-        s.setStudentId_honor(studentId.get());  //设置属性
+        Student st;
+        st = studentRepository.findById(studentId).get();//通过接口获取学生数据库中id值对应的相关数据，下同获取课程
+        s.setStudentId_honor(st);  //设置属性
+        studentRepository.save(st);
         s.setHonor(honor);//h获取荣誉
         honorRepository.save(s);  //新建和修改都调用save方法
         return CommonMethod.getReturnData(s.getId());  // 将记录的id返回前端

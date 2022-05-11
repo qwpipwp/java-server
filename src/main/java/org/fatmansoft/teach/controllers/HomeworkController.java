@@ -145,12 +145,10 @@ public class HomeworkController {
     public DataResponse homeworkEditSubmit(@Valid @RequestBody DataRequest dataRequest) {
         Map form = dataRequest.getMap("form"); //参数获取Map对象
         Integer id = CommonMethod.getInteger(form,"id");
-        String studentNum =CommonMethod.getString(form,"studentNum");  //Map 获取属性的值
-        String courseNum = CommonMethod.getString(form,"courseNum");//获取课程号
+        Integer studentId = CommonMethod.getInteger(form,"studentId");//获取学生的id下同课程的id
+        Integer courseId = CommonMethod.getInteger(form,"courseId");
         String homework = CommonMethod.getString(form,"homework");//获取作业信息
         String homeworkIsDone = CommonMethod.getString(form,"homeworkIsDone");//获取作业完成情况
-        Optional<Student> student=  studentRepository.findByStudentNum(studentNum);//以Optional类型储存学生的学号
-        Optional<Course> course=  courseRepository.findByCourseNum(courseNum);//以Optional类型储存学生姓名
         Homework s= null;
         Optional<Homework> op;
         if(id != null) {//选项提高安全性
@@ -164,12 +162,16 @@ public class HomeworkController {
             id = getNewHomeworkId(); //获取鑫的主键，这个是线程同步问题;
             s.setId(id);  //设置新的id
         }
-        if(student.isPresent()) {
-            s.setStudent(student.get());
-        }//设置属性
-        if(course.isPresent()) {
-            s.setCourse(course.get());
-        }
+        Student st;
+        Course c;
+        st = studentRepository.findById(studentId).get();//通过接口获取学生数据库中id值对应的相关数据，下同获取课程
+        c = courseRepository.findById(courseId).get();
+        s.setStudent(st);  //设置属性
+        s.setCourse(c);
+        st.addCourse(c);//多对多的实现，将课程和学生建立联系，下同
+        c.addStudent(st);
+        studentRepository.save(st);
+        courseRepository.save(c);
         s.setHomework(homework);//获取作业信息
         s.setHomeworkIsDone(homeworkIsDone);//获取作业完成情况
         homeworkRepository.save(s);  //新建和修改都调用save方法

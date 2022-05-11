@@ -33,7 +33,7 @@ public class IntroduceService {
         List attachList = new ArrayList();
 
         Map m;
-        List<Score> sList2 = scoreRepository.findScoreListByNumName("2001");  //数据库查询操作
+        List<Score> sList2 = scoreRepository.findScoreListByNumName("张平");  //数据库查询操作
         Score s2;
         s2 = sList2.get(0);
         m = new HashMap();

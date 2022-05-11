@@ -13,7 +13,7 @@ public interface FamilyMemberRepository extends JpaRepository<FamilyMember,Integ
     @Query(value = "select max(id) from FamilyMember  ")
     Integer getMaxId();//获取最大id
 
-    @Query(value = "from FamilyMember where ?1='' or student like %?1% ")
+    @Query(value = "from FamilyMember where ?1='' or student.studentName like %?1% or student.studentNum like %?1% ")
     List<FamilyMember> findFamilyMemberListByNumName(String numName);//在家庭关系数据库中以学号，姓名查找数据
 
     @Query(value = "select * from familyMember  where ?1='' or studentId like %?1% or studentName like %?1% ", nativeQuery = true)

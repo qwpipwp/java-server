@@ -50,7 +50,7 @@ public class TeachController {
             m = new HashMap();
             m.put("id", s.getId());
             m.put("studentNum",s.getStudentNum());
-            studentNameParas = "model=information&id=" + s.getId();
+            studentNameParas = "model=information&id=" + s.getId()+"&studentName="+ s.getStudentName();
             m.put("studentName",s.getStudentName());
             m.put("studentNameParas",studentNameParas);//通过查询跳转页面至学生的基本信息页面
             if("1".equals(s.getSex())) {    //数据库存的是编码，显示是名称

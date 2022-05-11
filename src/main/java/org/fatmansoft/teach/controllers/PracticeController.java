@@ -151,14 +151,11 @@ public class PracticeController {
     public DataResponse practiceEditSubmit(@Valid @RequestBody DataRequest dataRequest) {
         Map form = dataRequest.getMap("form"); //参数获取Map对象
         Integer id = CommonMethod.getInteger(form,"id");
-        String studentNum = CommonMethod.getString(form,"studentNum");  //Map 获取属性的值
-        String studentName = CommonMethod.getString(form,"studentName");//获取前端输入的学生姓名
+        Integer studentId = CommonMethod.getInteger(form,"studentId");//获取学生的id下同课程的id
         String practiceNum = CommonMethod.getString(form,"practiceNum");//获取前端的活动序号
         String practiceName = CommonMethod.getString(form,"practiceName");//获取前端输入的活动名称
         String practiceKind = CommonMethod.getString(form,"practiceKind");//获取前端选择的活动种类
         Date practiceDate = CommonMethod.getDate(form,"practiceDate");//获取活动的日期
-        Optional<Student> studentId=  studentRepository.findByStudentNum(studentNum);//以Optional类型储存学生的学号
-        Optional<Student> studentNa=  studentRepository.findByStudentName(studentName);//以Optional类型储存学生姓名
         Practice p= null;
         Optional<Practice> op;
         if(id != null) {//选项提高安全性
@@ -172,12 +169,10 @@ public class PracticeController {
             id = getNewPracticeId();//获取鑫的主键，这个是线程同步问题;
             p.setId(id);//设置id
         }
-        if(studentId.isPresent()) {
-            p.setStudentId_practice(studentId.get());//获取学生id
-        }//设置属性\
-        if(studentNa.isPresent()) {
-            p.setStudentId_practice(studentNa.get());
-        }
+        Student st;
+        st = studentRepository.findById(studentId).get();//通过接口获取学生数据库中id值对应的相关数据，下同获取课程
+        p.setStudentId_practice(st);  //设置属性
+        studentRepository.save(st);
         p.setPracticeNum(practiceNum);//获取活动序号
         p.setPracticeName(practiceName);//获取活动名称
         p.setPracticeKind(practiceKind);//获取活动种类

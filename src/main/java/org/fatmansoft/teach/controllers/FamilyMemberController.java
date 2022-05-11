@@ -141,13 +141,10 @@ public class FamilyMemberController {
     public DataResponse familyMemberEditSubmit(@Valid @RequestBody DataRequest dataRequest) {
         Map form = dataRequest.getMap("form"); //参数获取Map对象
         Integer id = CommonMethod.getInteger(form,"id");
-        String studentNum =CommonMethod.getString(form,"studentNum");  //Map 获取属性的值
-        String studentName =CommonMethod.getString(form,"studentName");  //Map 获取属性的值
+        Integer studentId = CommonMethod.getInteger(form,"studentId");//获取学生的id下同课程的id
         String name = CommonMethod.getString(form,"name");//获取家长姓名
         String sex = CommonMethod.getString(form,"sex");//获取性别
         String rel = CommonMethod.getString(form,"rel");//获取关系
-        Optional<Student> studentId=  studentRepository.findByStudentNum(studentNum);
-        Optional<Student> studentNa=  studentRepository.findByStudentName(studentName);
         FamilyMember s= null;
         Optional<FamilyMember> op;
         if(id != null) {//选项提高安全性
@@ -161,12 +158,10 @@ public class FamilyMemberController {
             id = getNewFamilyMemberId(); //获取鑫的主键，这个是线程同步问题;
             s.setId(id);  //设置新的id
         }
-        if(studentId.isPresent()) {
-            s.setStudentId_fa(studentId.get());//获取学生id
-        }//设置属性\
-        if(studentNa.isPresent()) {
-            s.setStudentId_fa(studentNa.get());
-        }
+        Student st;
+        st = studentRepository.findById(studentId).get();//通过接口获取学生数据库中id值对应的相关数据，下同获取课程
+        s.setStudentId_fa(st);  //设置属性
+        studentRepository.save(st);
         s.setName(name);//获取姓名
         s.setSex(sex);//获取性别
         s.setRel(rel);//获取关系

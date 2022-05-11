@@ -143,11 +143,9 @@ public class AttendenceController {
     public DataResponse attendenceEditSubmit(@Valid @RequestBody DataRequest dataRequest) {
         Map form = dataRequest.getMap("form"); //参数获取Map对象
         Integer id = CommonMethod.getInteger(form,"id");
-        String studentNum =CommonMethod.getString(form,"studentNum");  //Map 获取属性的值
-        String courseNum = CommonMethod.getString(form,"courseNum");//获取课程号
+        Integer studentId = CommonMethod.getInteger(form,"studentId");//获取学生的id下同课程的id
+        Integer courseId = CommonMethod.getInteger(form,"courseId");
         String attendence = CommonMethod.getString(form,"attendence");//获取出勤情况
-        Optional<Student> student=  studentRepository.findByStudentNum(studentNum);
-        Optional<Course> course=  courseRepository.findByCourseNum(courseNum);
         Attendence s= null;
         Optional<Attendence> op;
         if(id != null) {//选项提高安全性
@@ -161,12 +159,16 @@ public class AttendenceController {
             id = getNewAttendenceId(); //获取鑫的主键，这个是线程同步问题;
             s.setId(id);  //设置新的id
         }
-        if(student.isPresent()) {
-            s.setStudent(student.get());
-        }//设置属性
-        if(course.isPresent()) {
-            s.setCourse(course.get());
-        }
+        Student st;
+        Course c;
+        st = studentRepository.findById(studentId).get();//通过接口获取学生数据库中id值对应的相关数据，下同获取课程
+        c = courseRepository.findById(courseId).get();
+        s.setStudent(st);  //设置属性
+        s.setCourse(c);
+        st.addCourse(c);//多对多的实现，将课程和学生建立联系，下同
+        c.addStudent(st);
+        studentRepository.save(st);
+        courseRepository.save(c);
         s.setAttendence(attendence);//获取出勤情况
         attendenceRepository.save(s);  //新建和修改都调用save方法
         return CommonMethod.getReturnData(s.getId());  // 将记录的id返回前端

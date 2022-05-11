@@ -130,14 +130,10 @@ public class ActivityController {
     public DataResponse activityEditSubmit(@Valid @RequestBody DataRequest dataRequest) {
         Map form = dataRequest.getMap("form"); //参数获取Map对象
         Integer id = CommonMethod.getInteger(form,"id");
-        String studentNum =CommonMethod.getString(form,"studentNum");  //Map 获取属性的值
-        String studentName = CommonMethod.getString(form,"studentName");  //Map 获取属性的值
+        Integer studentId = CommonMethod.getInteger(form,"studentId");//获取学生的id下同课程的id
         String activityNum = CommonMethod.getString(form,"activityNum"); //获取前端输入的活动序号
         String activityName = CommonMethod.getString(form,"activityName");//获取前端输入的活动名称
         Date dates = CommonMethod.getDate(form,"dates");//获取活动的日期
-
-        Optional<Student> studentId=  studentRepository.findByStudentNum(studentNum);
-        Optional<Student> studentNa=  studentRepository.findByStudentName(studentName);
 
         Activity s= null;
         Optional<Activity> op;
@@ -154,12 +150,10 @@ public class ActivityController {
         }
         s.setActivityNum(activityNum);  //设置属性
         s.setActivityName(activityName);  //设置属性
-        if(studentId.isPresent()) {
-            s.setStudentId_activity(studentId.get());//获取学生id
-        }//设置属性
-        if(studentNa.isPresent()) {
-            s.setStudentId_activity(studentNa.get());
-        }
+        Student st;
+        st = studentRepository.findById(studentId).get();//通过接口获取学生数据库中id值对应的相关数据，下同获取课程
+        s.setStudentId_activity(st);  //设置属性
+        studentRepository.save(st);
 
         s.setDates(dates);//获取活动的日期
         activityRepository.save(s);  //新建和修改都调用save方法

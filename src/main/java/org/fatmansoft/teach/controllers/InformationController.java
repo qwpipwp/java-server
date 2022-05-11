@@ -1,5 +1,6 @@
 package org.fatmansoft.teach.controllers;
 
+import org.fatmansoft.teach.models.Course;
 import org.fatmansoft.teach.models.Information;
 import org.fatmansoft.teach.models.Student;
 import org.fatmansoft.teach.payload.request.DataRequest;
@@ -125,13 +126,10 @@ public class InformationController {
     public DataResponse informationEditSubmit(@Valid @RequestBody DataRequest dataRequest) {
         Map form = dataRequest.getMap("form"); //参数获取Map对象
         Integer id = CommonMethod.getInteger(form,"id");
-        String studentNum = CommonMethod.getString(form,"studentNum");  //Map 获取属性的值
-        String studentName = CommonMethod.getString(form,"studentName");//获取前端输入的学生姓名
+        Integer studentId = CommonMethod.getInteger(form,"studentId");//获取学生的id下同课程的id
         Integer telephoneNumber = CommonMethod.getInteger(form,"telephoneNumber");//获取前端的电话号码
         String preEnrolmentInformation = CommonMethod.getString(form,"preEnrolmentInformation");//获取信息
         String social = CommonMethod.getString(form,"social");//获取社交
-        Optional<Student> studentId=  studentRepository.findByStudentNum(studentNum);//以Optional类型储存学生的学号
-        Optional<Student> studentNa=  studentRepository.findByStudentName(studentName);//以Optional类型储存学生姓名
         Information s= null;
         Optional<Information> op;
         if(id != null) {//选项提高安全性
@@ -145,12 +143,10 @@ public class InformationController {
             id = getNewInformationId(); //获取鑫的主键，这个是线程同步问题;
             s.setId(id);  //设置新的id
         }
-        if(studentId.isPresent()) {//获取学生id
-            s.setStudentId_information(studentId.get());
-        }//设置属性
-        if(studentNa.isPresent()) {
-            s.setStudentId_information(studentNa.get());
-        }
+        Student st;
+        st = studentRepository.findById(studentId).get();//通过接口获取学生数据库中id值对应的相关数据，下同获取课程
+        s.setStudentId_information(st);  //设置属性
+        studentRepository.save(st);
         s.setTelephoneNumber(telephoneNumber);//获取电话号码
         s.setPreEnrolmentInformation(preEnrolmentInformation);//获取信息
         s.setSocial(social);//获取社交

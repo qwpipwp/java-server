@@ -300,7 +300,7 @@ uims:
         - type: input
           prop: rel
           label: 关系
-    - name: activity
+    - name: activity  #活动管理模块页面
       type: table
       title: 日常活动管理
       showAdd: 1
@@ -328,7 +328,7 @@ uims:
       query:
         - type: input
           prop: numName
-          label: 请输入活动序号或活动名称
+          label: 请输入学号或学生姓名
     - name: activityEdit   #活动管理模块编辑页面
       type: form
       title: 活动信息
@@ -348,7 +348,7 @@ uims:
         - type: date
           prop: dates
           label: 日期
-    - name: practice
+    - name: practice   #实践信息管理模块
       type: table
       title: 课外实践管理
       showAdd: 1
@@ -380,7 +380,7 @@ uims:
         - type: input
           prop: numName
           label: 请输入名称或序号
-    - name: practiceEdit
+    - name: practiceEdit  #实践信息编辑模块
       type: form
       title: 实践信息
       item:
@@ -470,7 +470,7 @@ uims:
               label: 完成
             - value: 2
               label: 未完成
-    - name: homework
+    - name: homework  #作业管理模块编辑页面
       type: table
       title: 作业信息管理
       showAdd: 1

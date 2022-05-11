@@ -54,11 +54,11 @@ public class CourseController {
             m.put("id", s.getId());
             m.put("courseNum",s.getCourseNum());
             m.put("courseName",s.getCourseName());
-            courseNameParas = "model=homework&courseId=" + s.getId()+"&courseName="+ s.getCourseName();
+            courseNameParas = "model=homework&courseId=" + s.getId()+"&courseNum="+ s.getCourseNum();
             m.put("courseNameParas",courseNameParas);
             m.put("credit",s.getCredit());
             m.put("precourse",s.getPreCourse());
-            attendenceParas = "model=attendence&courseId=" + s.getId()+"&courseName="+ s.getCourseName();
+            attendenceParas = "model=attendence&courseId=" + s.getId()+"&courseNum="+ s.getCourseNum();
             m.put("attendence","出勤情况");
             m.put("attendenceParas",attendenceParas);
             dataList.add(m);
