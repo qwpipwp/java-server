@@ -67,17 +67,22 @@ public class HonorController {
     @PostMapping("/honorInit")//成绩页面的初始化方法
     @PreAuthorize("hasRole('ADMIN')")
     public DataResponse honorInit(@Valid @RequestBody DataRequest dataRequest) {
-        List dataList = getHonorMapList("");//传递空串以遍历出所有的数据
-        return CommonMethod.getReturnData(dataList);  //按照测试框架规范会送Map的list
+        String studentName = dataRequest.getString("studentName");//以studentName为key值检索score数据库中所有相关数据
+        if(studentName == null)
+        {
+            studentName = "";//为空时传递空串，以显示数据库中所有数据
+        }
+        List<HashMap<String,Object>> mapList = getHonorMapList(studentName);
+        return CommonMethod.getReturnData(mapList);//返回数据
     }
     //honor页面点击查询按钮请求
     //Table界面初始是请求列表的数据，从请求对象里获得前端界面输入的字符串，作为参数传递给方法getStudentMapList，返回所有学生数据，
     @PostMapping("/honorQuery")
     @PreAuthorize("hasRole('ADMIN')")
     public DataResponse honorQuery(@Valid @RequestBody DataRequest dataRequest) {
-        String studentId= dataRequest.getString("numName");//输入学生姓名或学生学号以查询内容
-        List dataList = getHonorMapList(studentId);
-        return CommonMethod.getReturnData(dataList);  //按照测试框架规范会送Map的list
+        String numName= dataRequest.getString("numName");//输入学生姓名或学生学号以查询内容
+        List<HashMap<String,Object>> mapList = getHonorMapList(numName);//使用接口功能查询数据库，将数据存
+        return CommonMethod.getReturnData(mapList);  //按照测试框架规范会送Map的list
     }
 
     //honorEdit初始化方法
@@ -123,7 +128,7 @@ public class HonorController {
     public DataResponse honorEditSubmit(@Valid @RequestBody DataRequest dataRequest) {
         Map form = dataRequest.getMap("form"); //参数获取Map对象
         Integer id = CommonMethod.getInteger(form,"id");
-        Integer studentId = CommonMethod.getInteger(form,"studentId");//获取学生的id下同课程的id
+        Integer studentId = CommonMethod.getInteger(form,"studentId");//获取学生的id
         String honor = CommonMethod.getString(form,"honor");//获取荣誉
         Honor s= null;
         Optional<Honor> op;
@@ -139,10 +144,12 @@ public class HonorController {
             s.setId(id);  //设置新的id
         }
         Student st;
-        st = studentRepository.findById(studentId).get();//通过接口获取学生数据库中id值对应的相关数据，下同获取课程
-        s.setStudentId_honor(st);  //设置属性
-        studentRepository.save(st);
-        s.setHonor(honor);//h获取荣誉
+        if(studentId != null) {
+            st = studentRepository.findById(studentId).get();//通过接口获取学生数据库中id值对应的相关数据，下同获取课程
+            s.setStudentId_honor(st);  //设置属性
+            studentRepository.save(st);
+        }
+        s.setHonor(honor);//获取荣誉
         honorRepository.save(s);  //新建和修改都调用save方法
         return CommonMethod.getReturnData(s.getId());  // 将记录的id返回前端
     }
@@ -151,7 +158,7 @@ public class HonorController {
     //Student页面的列表里点击删除按钮则可以删除已经存在的学生信息， 前端会将该记录的id 回传到后端，方法从参数获取id，查出相关记录，调用delete方法删除
     @PostMapping("/honorDelete")
     @PreAuthorize(" hasRole('ADMIN')")
-    public DataResponse scoreDelete(@Valid @RequestBody DataRequest dataRequest) {
+    public DataResponse honorDelete(@Valid @RequestBody DataRequest dataRequest) {
         Integer id = dataRequest.getInteger("id");  //获取id值
         Honor s= null;
         Optional<Honor> op;

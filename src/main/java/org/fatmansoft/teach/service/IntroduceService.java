@@ -28,7 +28,7 @@ public class IntroduceService {
         s1 = sList1.get(0);
         Map data = new HashMap();
         data.put("myName", "张平");   // 学生信息
-        data.put("overview","学号；"+s1.getId());  //学生基本信息综述
+        data.put("overview","学号；"+s1.getStudentNum());  //学生基本信息综述
 
         List attachList = new ArrayList();
 

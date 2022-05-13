@@ -65,23 +65,26 @@ public class ActivityController {
     }
     //activity页面初始化方法
     //Table界面初始是请求列表的数据，这里缺省查出所有学生的信息，传递字符“”给方法getActivityMapList，返回所有学生数据，
-    @PostMapping("/activityInit")
+    @PostMapping("/activityInit")//成绩页面的初始化方法
     @PreAuthorize("hasRole('ADMIN')")
-    public DataResponse activityInit(@Valid @RequestBody DataRequest dataRequest) {
-        List dataList = getActivityMapList("");//传递空串以遍历出所有的数据
-        return CommonMethod.getReturnData(dataList);  //按照测试框架规范会送Map的list
+    public DataResponse activityInit(@Valid @RequestBody DataRequest dataRequest)
+    {
+        String studentName = dataRequest.getString("studentName");//以studentName为key值检索score数据库中所有相关数据
+        if(studentName == null)
+        {
+            studentName = "";//为空时传递空串，以显示数据库中所有数据
+        }
+        List<HashMap<String,Object>> mapList = getActivityMapList(studentName);
+        return CommonMethod.getReturnData(mapList);//返回数据
     }
 
-    
-
-    //activity页面点击查询按钮请求
-    //Table界面初始是请求列表的数据，从请求对象里获得前端界面输入的字符串，作为参数传递给方法getActivityMapList，返回所有学生数据，
-    @PostMapping("/activityQuery")
+    @PostMapping("/activityQuery")//查询功能实现
     @PreAuthorize("hasRole('ADMIN')")
-    public DataResponse activityQuery(@Valid @RequestBody DataRequest dataRequest) {
-        String numName= dataRequest.getString("numName");//输入学生姓名或学生学号以查询内容
-        List dataList = getActivityMapList(numName);
-        return CommonMethod.getReturnData(dataList);  //按照测试框架规范会送Map的list
+    public DataResponse activityQuery(@Valid@RequestBody DataRequest dataRequest)
+    {
+        String numName = dataRequest.getString("numName");//获取从前端返回的查询值
+        List<HashMap<String,Object>> mapList = getActivityMapList(numName);//使用接口功能查询数据库，将数据存到list中
+        return CommonMethod.getReturnData(mapList);//返回查询到的数据
     }
 
     //activityEdit初始化方法
@@ -151,9 +154,11 @@ public class ActivityController {
         s.setActivityNum(activityNum);  //设置属性
         s.setActivityName(activityName);  //设置属性
         Student st;
-        st = studentRepository.findById(studentId).get();//通过接口获取学生数据库中id值对应的相关数据，下同获取课程
-        s.setStudentId_activity(st);  //设置属性
-        studentRepository.save(st);
+        if(studentId != null) {
+            st = studentRepository.findById(studentId).get();//通过接口获取学生数据库中id值对应的相关数据，下同获取课程
+            s.setStudentId_activity(st);  //设置属性
+            studentRepository.save(st);
+        }
 
         s.setDates(dates);//获取活动的日期
         activityRepository.save(s);  //新建和修改都调用save方法

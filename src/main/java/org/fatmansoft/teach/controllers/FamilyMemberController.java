@@ -69,20 +69,26 @@ public class FamilyMemberController {
     }
     //familyMember页面初始化方法
     //Table界面初始是请求列表的数据，这里缺省查出所有学生的信息，传递字符“”给方法getFamilyMemberMapList，返回所有学生数据，
-    @PostMapping("/familyMemberInit")
+    @PostMapping("/familyMemberInit")//成绩页面的初始化方法
     @PreAuthorize("hasRole('ADMIN')")
-    public DataResponse familyMemberInit(@Valid @RequestBody DataRequest dataRequest) {
-        List dataList = getFamilyMemberMapList("");//传递空串以遍历出所有的数据
-        return CommonMethod.getReturnData(dataList);  //按照测试框架规范会送Map的list
+    public DataResponse familyMemberInit(@Valid @RequestBody DataRequest dataRequest)
+    {
+        String studentName = dataRequest.getString("studentName");//以studentName为key值检索score数据库中所有相关数据
+        if(studentName == null)
+        {
+            studentName = "";//为空时传递空串，以显示数据库中所有数据
+        }
+        List<HashMap<String,Object>> mapList = getFamilyMemberMapList(studentName);
+        return CommonMethod.getReturnData(mapList);//返回数据
     }
-    //familyMember页面点击查询按钮请求
-    //Table界面初始是请求列表的数据，从请求对象里获得前端界面输入的字符串，作为参数传递给方法getFamilyMemberMapList，返回所有学生数据，
-    @PostMapping("/familyMemberQuery")
+
+    @PostMapping("/familyMemberQuery")//查询功能实现
     @PreAuthorize("hasRole('ADMIN')")
-    public DataResponse familyMemberQuery(@Valid @RequestBody DataRequest dataRequest) {
-        String studentId= dataRequest.getString("numName");//输入学生姓名或学生学号以查询内容
-        List dataList = getFamilyMemberMapList(studentId);
-        return CommonMethod.getReturnData(dataList);  //按照测试框架规范会送Map的list
+    public DataResponse familyMemberQuery(@Valid@RequestBody DataRequest dataRequest)
+    {
+        String numName = dataRequest.getString("numName");//获取从前端返回的查询值
+        List<HashMap<String,Object>> mapList = getFamilyMemberMapList(numName);//使用接口功能查询数据库，将数据存到list中
+        return CommonMethod.getReturnData(mapList);//返回查询到的数据
     }
 
     //familyMemberEdit初始化方法
@@ -159,9 +165,11 @@ public class FamilyMemberController {
             s.setId(id);  //设置新的id
         }
         Student st;
-        st = studentRepository.findById(studentId).get();//通过接口获取学生数据库中id值对应的相关数据，下同获取课程
-        s.setStudentId_fa(st);  //设置属性
-        studentRepository.save(st);
+        if(studentId != null) {
+            st = studentRepository.findById(studentId).get();//通过接口获取学生数据库中id值对应的相关数据，下同获取课程
+            s.setStudentId_fa(st);  //设置属性
+            studentRepository.save(st);
+        }
         s.setName(name);//获取姓名
         s.setSex(sex);//获取性别
         s.setRel(rel);//获取关系

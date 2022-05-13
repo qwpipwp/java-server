@@ -66,19 +66,26 @@ public class PracticeController {
         return dataList;
     }
 
-    @PostMapping("/practiceInit")//活动页面的初始化
+    @PostMapping("/practiceInit")//成绩页面的初始化方法
     @PreAuthorize("hasRole('ADMIN')")
-    public DataResponse practiceInit(@Valid @RequestBody DataRequest dataRequest) {
-        List dataList = getPracticeMapList("");//传递空串以遍历出所有的数据
-        return CommonMethod.getReturnData(dataList);
+    public DataResponse practiceInit(@Valid @RequestBody DataRequest dataRequest)
+    {
+        String studentName = dataRequest.getString("studentName");//以studentName为key值检索score数据库中所有相关数据
+        if(studentName == null)
+        {
+            studentName = "";//为空时传递空串，以显示数据库中所有数据
+        }
+        List<HashMap<String,Object>> mapList = getPracticeMapList(studentName);
+        return CommonMethod.getReturnData(mapList);//返回数据
     }
 
-    @PostMapping("/practiceQuery")//活动页面的查询功能的实现
+    @PostMapping("/practiceQuery")//查询功能实现
     @PreAuthorize("hasRole('ADMIN')")
-    public DataResponse practiceQuery(@Valid @RequestBody DataRequest dataRequest) {
-        String numName= dataRequest.getString("numName");//输入学生姓名或学生学号以查询内容
-        List dataList = getPracticeMapList(numName);
-        return CommonMethod.getReturnData(dataList);
+    public DataResponse practiceQuery(@Valid@RequestBody DataRequest dataRequest)
+    {
+        String numName = dataRequest.getString("numName");//获取从前端返回的查询值
+        List<HashMap<String,Object>> mapList = getPracticeMapList(numName);//使用接口功能查询数据库，将数据存到list中
+        return CommonMethod.getReturnData(mapList);//返回查询到的数据
     }
 
     @PostMapping("/practiceEditInit")//编辑页面的初始化
@@ -170,9 +177,11 @@ public class PracticeController {
             p.setId(id);//设置id
         }
         Student st;
-        st = studentRepository.findById(studentId).get();//通过接口获取学生数据库中id值对应的相关数据，下同获取课程
-        p.setStudentId_practice(st);  //设置属性
-        studentRepository.save(st);
+        if(studentId != null) {
+            st = studentRepository.findById(studentId).get();//通过接口获取学生数据库中id值对应的相关数据，下同获取课程
+            p.setStudentId_practice(st);  //设置属性
+            studentRepository.save(st);
+        }
         p.setPracticeNum(practiceNum);//获取活动序号
         p.setPracticeName(practiceName);//获取活动名称
         p.setPracticeKind(practiceKind);//获取活动种类

@@ -54,11 +54,11 @@ public class CourseController {
             m.put("id", s.getId());
             m.put("courseNum",s.getCourseNum());
             m.put("courseName",s.getCourseName());
-            courseNameParas = "model=homework&courseId=" + s.getId()+"&courseNum="+ s.getCourseNum();
+            courseNameParas = "model=homework&courseId=" + s.getId()+"&courseName="+ s.getCourseName();
             m.put("courseNameParas",courseNameParas);
             m.put("credit",s.getCredit());
             m.put("precourse",s.getPreCourse());
-            attendenceParas = "model=attendence&courseId=" + s.getId()+"&courseNum="+ s.getCourseNum();
+            attendenceParas = "model=attendence&courseId=" + s.getId()+"&courseName="+ s.getCourseName();
             m.put("attendence","出勤情况");
             m.put("attendenceParas",attendenceParas);
             dataList.add(m);
@@ -132,7 +132,7 @@ public class CourseController {
         String courseNum = CommonMethod.getString(form,"courseNum");  //Map 获取属性的值
         String courseName = CommonMethod.getString(form,"courseName");
         Integer credit = CommonMethod.getInteger(form,"credit");
-        String precourse = CommonMethod.getString(form,"precourse");
+        String preCourse = CommonMethod.getString(form,"preCourse");
         Course s= null;
         Optional<Course> op;
         if(id != null) {
@@ -149,7 +149,7 @@ public class CourseController {
         s.setCourseNum(courseNum);  //设置属性
         s.setCourseName(courseName);
         s.setCredit(credit);
-        s.setPreCourse(precourse);
+        s.setPreCourse(preCourse);
         courseRepository.save(s);  //新建和修改都调用save方法
         return CommonMethod.getReturnData(s.getId());  // 将记录的id返回前端
     }

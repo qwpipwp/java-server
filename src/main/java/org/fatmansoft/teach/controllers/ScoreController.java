@@ -79,43 +79,20 @@ public class ScoreController {
         Course c;
         Optional<Score> op;
         if(id != null) {
-            op= scoreRepository.findById(id);//通过接口寻找id值作为key值对应的数据，以便接下来的编辑操作
-            if(op.isPresent()) {//确认id对应数据是否存在，提高程序的鲁棒性
+            op = scoreRepository.findById(id);//通过接口寻找id值作为key值对应的数据，以便接下来的编辑操作
+            if (op.isPresent()) {//确认id对应数据是否存在，提高程序的鲁棒性
                 sc = op.get();
             }
         }
-        //动态生成选择列表
-        Map m;
-        int i;
-        List studentIdList = new ArrayList();
-        List<Student> sList = studentRepository.findAll();//生成全体学生列表
-        for(i = 0; i <sList.size();i++) {
-            s =sList.get(i);
-            m = new HashMap();
-            m.put("label",s.getStudentName());
-            m.put("value",s.getId());
-            studentIdList.add(m);
-        }//进行遍历以获取每个学生的姓名和id以便前端展示
-        List courseIdList = new ArrayList();
-        List<Course> cList = courseRepository.findAll();
-        for(i = 0; i <cList.size();i++) {
-            c =cList.get(i);
-            m = new HashMap();
-            m.put("label",c.getCourseName());
-            m.put("value",c.getId());
-            courseIdList.add(m);
-        }//同上，这次获取课程的名称和id
-        Map form = new HashMap();//创建哈希表储存编辑页面使用的数据
-        form.put("studentId","");
-        form.put("courseId","");
+        Map form = new HashMap();
         if(sc != null) {//当成绩类不为空时，进行数据的传递
-            form.put("id",sc.getId());//获取id值传入哈希表下同获取学生id课程的id和成绩
-            form.put("studentId",sc.getStudent().getId());
-            form.put("courseId",sc.getCourse().getId());
-            form.put("score",sc.getScore());
-        }
-        form.put("studentIdList",studentIdList);//添加学生的姓名和学号至编辑页面，下同添加课程号与课程名
-        form.put("courseIdList",courseIdList);
+                form.put("id",sc.getId());//获取id
+                form.put("studentNum",sc.getStudent().getStudentNum());//获取学号
+                form.put("studentName",sc.getStudent().getStudentName());//获取学生姓名
+                form.put("courseNum",sc.getCourse().getCourseNum());//获取课程号
+                form.put("courseName",sc.getCourse().getCourseName());//获取课程名称
+                form.put("score",sc.getScore());//获取成绩
+            }
         return CommonMethod.getReturnData(form);//返回编辑数据
     }
 

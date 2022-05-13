@@ -163,7 +163,7 @@ uims:
         - type: input
           prop: score
           label: 成绩
-    - name: honor   #成绩管理模块
+    - name: honor   #荣誉管理模块
       type: table
       title: 荣誉管理
       showAdd: 1
@@ -280,10 +280,10 @@ uims:
       type: form
       title: 家庭信息编辑
       item:
-        - type: input
+        - type: text
           prop: studentNum
           label: 学号
-        - type: input
+        - type: text
           prop: studentName
           label: 姓名
         - type: input
