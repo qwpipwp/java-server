@@ -56,7 +56,7 @@ public class TeachController {
             return dataList;
         Student s;
         Map m;
-        String courseParas,studentNameParas,familyMemberParas;
+        String courseParas,studentNameParas,familyMemberParas,countParas;
         for(int i = 0; i < sList.size();i++) {
             s = sList.get(i);
             m = new HashMap();
@@ -76,6 +76,9 @@ public class TeachController {
             m.put("course","成绩情况");
             m.put("courseParas",courseParas);//通过查询跳转页面至学生的成绩信息页面
             familyMemberParas = "model=familyMember&studentId=" + s.getId()+"&studentName="+ s.getStudentName();
+            m.put("count","数据统计");
+            countParas = "model=count&studentId=" + s.getId()+"&studentName="+ s.getStudentName();
+            m.put("countParas",countParas);//通过查询跳转页面至学生的成绩信息页面
             m.put("familyMember","家庭成员");
             m.put("familyMemberParas",familyMemberParas);//通过查询跳转页面至学生的家庭成员页面
             dataList.add(m);

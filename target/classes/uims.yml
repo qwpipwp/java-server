@@ -37,6 +37,9 @@ uims:
         - type: link
           prop: familyMember
           label: 家庭成员
+        - type: link
+          prop: count
+          label: 数据统计
         - type: opers
           label: 操作
           opers:
@@ -529,3 +532,30 @@ uims:
               label: 完成
             - value: 2
               label: 未完成
+    - name: count  #数据管理模块编辑页面
+      type: table
+      title: 数据统计管理
+      showAdd: 1
+      item:
+        - type: text
+          prop: studentNum
+          label: 学号
+        - type: text
+          prop: studentName
+          label: 姓名
+        - type: text
+          prop: courseCount
+          label: 选课数量
+        - type: text
+          prop: honorCount
+          label: 获得荣誉数量
+        - type: text
+          prop: practice
+          label: 参加实践数量
+        - type: text
+          prop: activity
+          label: 参加活动数量
+      query:
+        - type: input
+          prop: numName
+          label: 请输入姓名或学号
