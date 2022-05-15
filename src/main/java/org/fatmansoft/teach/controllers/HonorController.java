@@ -128,7 +128,7 @@ public class HonorController {
     public DataResponse honorEditSubmit(@Valid @RequestBody DataRequest dataRequest) {
         Map form = dataRequest.getMap("form"); //参数获取Map对象
         Integer id = CommonMethod.getInteger(form,"id");
-        Integer studentId = CommonMethod.getInteger(form,"studentId");//获取学生的id
+        String studentId = CommonMethod.getString(form,"studentNum");//获取学生的id下同课程的id
         String honor = CommonMethod.getString(form,"honor");//获取荣誉
         Honor s= null;
         Optional<Honor> op;
@@ -145,7 +145,7 @@ public class HonorController {
         }
         Student st;
         if(studentId != null) {
-            st = studentRepository.findById(studentId).get();//通过接口获取学生数据库中id值对应的相关数据，下同获取课程
+            st = studentRepository.findByStudentNum(studentId).get();//通过接口获取学生数据库中id值对应的相关数据，下同获取课程
             s.setStudentId_honor(st);  //设置属性
             studentRepository.save(st);
         }

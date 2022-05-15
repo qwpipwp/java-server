@@ -50,7 +50,7 @@ public class CourseInfoController {
             m.put("courseNum", s.getCourse_info().getCourseNum());
             m.put("courseName", s.getCourse_info().getCourseName());
             m.put("courseInfo", s.getCourseInfo());
-            m.put("textbook", s.getTextBook());
+            m.put("textBook", s.getTextBook());
             m.put("resource", s.getResource());
             dataList.add(m);
         }
@@ -99,7 +99,7 @@ public class CourseInfoController {
             form.put("courseNum",s.getCourse_info().getCourseNum());
             form.put("courseName",s.getCourse_info().getCourseName());
             form.put("courseInfo",s.getCourseInfo());
-            form.put("textbook",s.getTextBook());
+            form.put("textBook",s.getTextBook());
             form.put("resource",s.getResource());
         }
         return CommonMethod.getReturnData(form); //这里回传包含学生信息的Map对象
@@ -122,9 +122,9 @@ public class CourseInfoController {
     public DataResponse courseInfoEditSubmit(@Valid @RequestBody DataRequest dataRequest) {
         Map form = dataRequest.getMap("form"); //参数获取Map对象
         Integer id = CommonMethod.getInteger(form,"id");
-        Integer courseId = CommonMethod.getInteger(form,"courseId");  //Map 获取属性的值
+        String courseId = CommonMethod.getString(form,"courseNum");  //Map 获取属性的值
         String courseInfo = CommonMethod.getString(form,"courseInfo");
-        String textbook = CommonMethod.getString(form,"textbook");
+        String textBook = CommonMethod.getString(form,"textBook");
         String resource = CommonMethod.getString(form,"resource");
         CourseInfo s= null;
         Optional<CourseInfo> op;
@@ -141,12 +141,12 @@ public class CourseInfoController {
         }
         Course c = null;
         if(courseId != null) {
-            c = courseRepository.findById(courseId).get();//通过接口获取课程数据库中id值对应的相关数据，下同获取课程
+            c = courseRepository.findByCourseNum(courseId).get();//通过接口获取课程数据库中id值对应的相关数据，下同获取课程
             s.setCourse_info(c);  //设置属性
             courseRepository.save(c);
         }
         s.setCourseInfo(courseInfo);
-        s.setTextBook(textbook);
+        s.setTextBook(textBook);
         s.setResource(resource);
         courseInfoRepository.save(s); //新建和修改都调用save方法
         return CommonMethod.getReturnData(s.getId());  // 将记录的id返回前端

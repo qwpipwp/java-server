@@ -132,7 +132,7 @@ public class InformationController {
     public DataResponse informationEditSubmit(@Valid @RequestBody DataRequest dataRequest) {
         Map form = dataRequest.getMap("form"); //参数获取Map对象
         Integer id = CommonMethod.getInteger(form,"id");
-        Integer studentId = CommonMethod.getInteger(form,"studentId");//获取学生的id下同课程的id
+        String studentId = CommonMethod.getString(form,"studentNum");//获取学生的id下同课程的id
         Integer telephoneNumber = CommonMethod.getInteger(form,"telephoneNumber");//获取前端的电话号码
         String preEnrolmentInformation = CommonMethod.getString(form,"preEnrolmentInformation");//获取信息
         String social = CommonMethod.getString(form,"social");//获取社交
@@ -151,7 +151,7 @@ public class InformationController {
         }
         Student st;
         if(studentId != null) {
-            st = studentRepository.findById(studentId).get();//通过接口获取学生数据库中id值对应的相关数据，下同获取课程
+            st = studentRepository.findByStudentNum(studentId).get();//通过接口获取学生数据库中id值对应的相关数据，下同获取课程
             s.setStudentId_information(st);  //设置属性
             studentRepository.save(st);
         }

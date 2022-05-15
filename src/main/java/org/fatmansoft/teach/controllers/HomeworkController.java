@@ -152,8 +152,8 @@ public class HomeworkController {
     public DataResponse homeworkEditSubmit(@Valid @RequestBody DataRequest dataRequest) {
         Map form = dataRequest.getMap("form"); //参数获取Map对象
         Integer id = CommonMethod.getInteger(form,"id");
-        Integer studentId = CommonMethod.getInteger(form,"studentId");//获取学生的id下同课程的id
-        Integer courseId = CommonMethod.getInteger(form,"courseId");
+        String studentId = CommonMethod.getString(form,"studentNum");//获取学生的id下同课程的id
+        String courseId = CommonMethod.getString(form,"courseNum");
         String homework = CommonMethod.getString(form,"homework");//获取作业信息
         String homeworkIsDone = CommonMethod.getString(form,"homeworkIsDone");//获取作业完成情况
         Homework s= null;
@@ -172,8 +172,8 @@ public class HomeworkController {
         Student st;
         Course c;
         if(studentId != null) {
-            st = studentRepository.findById(studentId).get();//通过接口获取学生数据库中id值对应的相关数据，下同获取课程
-            c = courseRepository.findById(courseId).get();
+            st = studentRepository.findByStudentNum(studentId).get();//通过接口获取学生数据库中id值对应的相关数据，下同获取课程
+            c = courseRepository.findByCourseNum(courseId).get();
             s.setStudent(st);  //设置属性
             s.setCourse(c);
             st.addCourse(c);//多对多的实现，将课程和学生建立联系，下同

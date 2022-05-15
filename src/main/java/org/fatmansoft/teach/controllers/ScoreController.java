@@ -108,8 +108,8 @@ public class ScoreController {
     {
         Map form = dataRequest.getMap("form"); //参数获取Map对象
         Integer id = CommonMethod.getInteger(form,"id");//获取key值id
-        Integer studentId = CommonMethod.getInteger(form,"studentId");//获取学生的id下同课程的id
-        Integer courseId = CommonMethod.getInteger(form,"courseId");
+        String studentId = CommonMethod.getString(form,"studentNum");//获取学生的id下同课程的id
+        String courseId = CommonMethod.getString(form,"courseNum");
         Double score = CommonMethod.getDouble(form,"score");//获取成绩
         Score sc= null;
         Student s = null;
@@ -127,10 +127,14 @@ public class ScoreController {
             sc.setId(id);  //设置新的id
         }
         if(studentId != null) {
-            s = studentRepository.findById(studentId).get();//通过接口获取学生数据库中id值对应的相关数据，下同获取课程
-            c = courseRepository.findById(courseId).get();
+            s = studentRepository.findByStudentNum(studentId).get();//通过接口获取学生数据库中id值对应的相关数据，下同获取课程
+            c = courseRepository.findByCourseNum(courseId).get();
             sc.setStudent(s);  //设置属性
             sc.setCourse(c);
+            s.addCourse(c);//多对多的实现，将课程和学生建立联系，下同
+            c.addStudent(s);
+            studentRepository.save(s);
+            courseRepository.save(c);
         }
         String S;
         S=score+"";
@@ -140,11 +144,7 @@ public class ScoreController {
             return CommonMethod.getReturnMessageError("请输入数字");
         }
         scoreRepository.save(sc);//新建和修改都调用save方法
-        s.addCourse(c);//多对多的实现，将课程和学生建立联系，下同
-        c.addStudent(s);
-        studentRepository.save(s);
-        courseRepository.save(c);
-        return CommonMethod.getReturnData(s.getId());
+        return CommonMethod.getReturnData(sc.getId());
     }
 
     @PostMapping("/scoreDelete")//数据的删除方法

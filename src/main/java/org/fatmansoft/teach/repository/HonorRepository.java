@@ -1,8 +1,6 @@
 package org.fatmansoft.teach.repository;
 
 import org.fatmansoft.teach.models.Honor;
-import org.fatmansoft.teach.models.Score;
-import org.fatmansoft.teach.models.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

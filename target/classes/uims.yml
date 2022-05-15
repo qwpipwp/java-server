@@ -4,6 +4,8 @@ uims:
       title: 学生管理
     - name: course
       title: 课程管理
+    - name: score
+      title: 成绩管理
     - name: honor
       title: 荣誉管理
     - name: activity
@@ -569,7 +571,7 @@ uims:
       showAdd: 1
       item:
         - type: text
-          prop: courseId
+          prop: courseNum
           label: 课程号
         - type: text
           prop: courseName
@@ -593,7 +595,7 @@ uims:
       title: 课程详情编辑
       item:
         - type: input
-          prop: courseId
+          prop: courseNum
           label: 课程号
         - type: input
           prop: courseName

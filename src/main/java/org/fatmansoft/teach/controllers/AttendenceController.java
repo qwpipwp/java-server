@@ -150,7 +150,7 @@ public class AttendenceController {
     public DataResponse attendenceEditSubmit(@Valid @RequestBody DataRequest dataRequest) {
         Map form = dataRequest.getMap("form"); //参数获取Map对象
         Integer id = CommonMethod.getInteger(form,"id");
-        Integer studentId = CommonMethod.getInteger(form,"studentId");//获取学生的id下同课程的id
+        String studentId = CommonMethod.getString(form,"studentNum");//获取学生的id下同课程的id
         Integer courseId = CommonMethod.getInteger(form,"courseId");
         String attendence = CommonMethod.getString(form,"attendence");//获取出勤情况
         Attendence s= null;
@@ -169,7 +169,7 @@ public class AttendenceController {
         Student st;
         Course c;
         if(studentId != null) {
-            st = studentRepository.findById(studentId).get();//通过接口获取学生数据库中id值对应的相关数据，下同获取课程
+            st = studentRepository.findByStudentNum(studentId).get();//通过接口获取学生数据库中id值对应的相关数据，下同获取课程
             c = courseRepository.findById(courseId).get();
             s.setStudent(st);  //设置属性
             s.setCourse(c);

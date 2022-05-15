@@ -133,7 +133,7 @@ public class ActivityController {
     public DataResponse activityEditSubmit(@Valid @RequestBody DataRequest dataRequest) {
         Map form = dataRequest.getMap("form"); //参数获取Map对象
         Integer id = CommonMethod.getInteger(form,"id");
-        Integer studentId = CommonMethod.getInteger(form,"studentId");//获取学生的id下同课程的id
+        String studentId = CommonMethod.getString(form,"studentNum");//获取学生的id下同课程的id
         String activityNum = CommonMethod.getString(form,"activityNum"); //获取前端输入的活动序号
         String activityName = CommonMethod.getString(form,"activityName");//获取前端输入的活动名称
         Date dates = CommonMethod.getDate(form,"dates");//获取活动的日期
@@ -155,11 +155,10 @@ public class ActivityController {
         s.setActivityName(activityName);  //设置属性
         Student st;
         if(studentId != null) {
-            st = studentRepository.findById(studentId).get();//通过接口获取学生数据库中id值对应的相关数据，下同获取课程
+            st = studentRepository.findByStudentNum(studentId).get();//通过接口获取学生数据库中id值对应的相关数据，下同获取课程
             s.setStudentId_activity(st);  //设置属性
             studentRepository.save(st);
         }
-
         s.setDates(dates);//获取活动的日期
         activityRepository.save(s);  //新建和修改都调用save方法
         return CommonMethod.getReturnData(s.getId());  // 将记录的id返回前端

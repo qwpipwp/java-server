@@ -158,7 +158,7 @@ public class PracticeController {
     public DataResponse practiceEditSubmit(@Valid @RequestBody DataRequest dataRequest) {
         Map form = dataRequest.getMap("form"); //参数获取Map对象
         Integer id = CommonMethod.getInteger(form,"id");
-        Integer studentId = CommonMethod.getInteger(form,"studentId");//获取学生的id下同课程的id
+        String studentId = CommonMethod.getString(form,"studentNum");//获取学生的id下同课程的id
         String practiceNum = CommonMethod.getString(form,"practiceNum");//获取前端的活动序号
         String practiceName = CommonMethod.getString(form,"practiceName");//获取前端输入的活动名称
         String practiceKind = CommonMethod.getString(form,"practiceKind");//获取前端选择的活动种类
@@ -178,7 +178,7 @@ public class PracticeController {
         }
         Student st;
         if(studentId != null) {
-            st = studentRepository.findById(studentId).get();//通过接口获取学生数据库中id值对应的相关数据，下同获取课程
+            st = studentRepository.findByStudentNum(studentId).get();//通过接口获取学生数据库中id值对应的相关数据，下同获取课程
             p.setStudentId_practice(st);  //设置属性
             studentRepository.save(st);
         }
