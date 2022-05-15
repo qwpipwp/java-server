@@ -77,7 +77,7 @@ public class HomeworkController {
     @PreAuthorize("hasRole('ADMIN')")
     public DataResponse homeworkInit(@Valid @RequestBody DataRequest dataRequest)
     {
-        String courseName = dataRequest.getString("courseName");//以studentName为key值检索score数据库中所有相关数据
+        String courseName = dataRequest.getString("courseName");//以studentName为key值检索Homework数据库中所有相关数据
         if(courseName == null)
         {
             courseName = "";//为空时传递空串，以显示数据库中所有数据

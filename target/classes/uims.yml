@@ -93,11 +93,15 @@ uims:
         - type: link
           prop: attendence
           label: 出勤情况
+        - type: link
+          prop: courseInfo
+          label: 课程详情
         - type: opers
           label: 操作
           opers:
             - name: edit
             - name: delete
+            - name: detail
       query:
         - type: input
           prop: numName
@@ -559,3 +563,47 @@ uims:
         - type: input
           prop: numName
           label: 请输入姓名或学号
+    - name: courseInfo  #课程详细信息
+      type: table
+      title: 课程详情
+      showAdd: 1
+      item:
+        - type: text
+          prop: courseId
+          label: 课程号
+        - type: text
+          prop: courseName
+          label: 课程名
+        - type: text
+          prop: courseInfo
+          label: 课程简介
+        - type: text
+          prop: textBook
+          label: 教科书
+        - type: text
+          prop: resource
+          label: 课程资源
+        - type: opers
+          label: 操作
+          opers:
+            - name: edit
+            - name: delete
+    - name: courseInfoEdit
+      type: form
+      title: 课程详情编辑
+      item:
+        - type: input
+          prop: courseId
+          label: 课程号
+        - type: input
+          prop: courseName
+          label: 课程名
+        - type: input
+          prop: courseInfo
+          label: 课程简介
+        - type: input
+          prop: textBook
+          label: 教科书
+        - type: input
+          prop: resource
+          label: 课程资源

@@ -76,11 +76,11 @@ public class CountController {
         return dataList;
     }
     //count页面初始化方法
-    //Table界面初始是请求列表的数据，这里缺省查出所有学生的信息，传递字符“”给方法getHonorMapList，返回所有学生数据，
+    //Table界面初始是请求列表的数据，这里缺省查出所有学生的信息，传递字符“”给方法getCountMapList，返回所有学生数据，
     @PostMapping("/countInit")//成绩页面的初始化方法
     @PreAuthorize("hasRole('ADMIN')")
     public DataResponse countInit(@Valid @RequestBody DataRequest dataRequest) {
-        String studentName = dataRequest.getString("studentName");//以studentName为key值检索score数据库中所有相关数据
+        String studentName = dataRequest.getString("studentName");//以studentName为key值检索COUNT数据库中所有相关数据
         if(studentName == null)
         {
             studentName = "";//为空时传递空串，以显示数据库中所有数据
@@ -89,7 +89,7 @@ public class CountController {
         return CommonMethod.getReturnData(mapList);//返回数据
     }
     //count页面点击查询按钮请求
-    //Table界面初始是请求列表的数据，从请求对象里获得前端界面输入的字符串，作为参数传递给方法getStudentMapList，返回所有学生数据，
+    //Table界面初始是请求列表的数据，从请求对象里获得前端界面输入的字符串，作为参数传递给方法getCountMapList，返回所有学生数据，
     @PostMapping("/countQuery")
     @PreAuthorize("hasRole('ADMIN')")
     public DataResponse countQuery(@Valid @RequestBody DataRequest dataRequest) {

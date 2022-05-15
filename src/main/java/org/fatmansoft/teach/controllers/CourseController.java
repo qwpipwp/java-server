@@ -47,7 +47,7 @@ public class CourseController {
             return dataList;
         Course s;
         Map m;
-        String courseNameParas,attendenceParas;
+        String courseNameParas,attendenceParas,courseInfoParas;
         for(int i = 0; i < sList.size();i++) {
             s = sList.get(i);
             m = new HashMap();
@@ -61,6 +61,9 @@ public class CourseController {
             attendenceParas = "model=attendence&courseId=" + s.getId()+"&courseName="+ s.getCourseName();
             m.put("attendence","出勤情况");
             m.put("attendenceParas",attendenceParas);
+            courseInfoParas = "model=courseInfo&courseId=" + s.getId()+"&courseName="+ s.getCourseName();
+            m.put("courseInfo","课程详情");
+            m.put("courseInfoParas",courseInfoParas);
             dataList.add(m);
         }
         return dataList;

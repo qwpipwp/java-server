@@ -69,7 +69,7 @@ public class ActivityController {
     @PreAuthorize("hasRole('ADMIN')")
     public DataResponse activityInit(@Valid @RequestBody DataRequest dataRequest)
     {
-        String studentName = dataRequest.getString("studentName");//以studentName为key值检索score数据库中所有相关数据
+        String studentName = dataRequest.getString("studentName");//以studentName为key值检索activity数据库中所有相关数据
         if(studentName == null)
         {
             studentName = "";//为空时传递空串，以显示数据库中所有数据

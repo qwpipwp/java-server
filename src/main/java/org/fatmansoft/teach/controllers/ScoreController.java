@@ -4,6 +4,7 @@ package org.fatmansoft.teach.controllers;
 import org.fatmansoft.teach.models.Course;
 import org.fatmansoft.teach.models.Score;
 import org.fatmansoft.teach.models.Student;
+import org.fatmansoft.teach.models.Method;
 import org.fatmansoft.teach.payload.request.DataRequest;
 import org.fatmansoft.teach.payload.response.DataResponse;
 import org.fatmansoft.teach.repository.CourseRepository;
@@ -125,11 +126,19 @@ public class ScoreController {
             id = getNewScoreId(); //获取鑫的主键，这个是线程同步问题;
             sc.setId(id);  //设置新的id
         }
-        s = studentRepository.findById(studentId).get();//通过接口获取学生数据库中id值对应的相关数据，下同获取课程
-        c = courseRepository.findById(courseId).get();
-        sc.setStudent(s);  //设置属性
-        sc.setCourse(c);
-        sc.setScore(score);
+        if(studentId != null) {
+            s = studentRepository.findById(studentId).get();//通过接口获取学生数据库中id值对应的相关数据，下同获取课程
+            c = courseRepository.findById(courseId).get();
+            sc.setStudent(s);  //设置属性
+            sc.setCourse(c);
+        }
+        String S;
+        S=score+"";
+        if(Method.IsDouble(S)) {
+            sc.setScore(score);
+        }else {
+            return CommonMethod.getReturnMessageError("请输入数字");
+        }
         scoreRepository.save(sc);//新建和修改都调用save方法
         s.addCourse(c);//多对多的实现，将课程和学生建立联系，下同
         c.addStudent(s);
