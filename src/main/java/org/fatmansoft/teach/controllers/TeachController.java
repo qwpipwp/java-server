@@ -10,6 +10,7 @@ import org.fatmansoft.teach.repository.StudentRepository;
 import org.fatmansoft.teach.service.IntroduceService;
 import org.fatmansoft.teach.util.CommonMethod;
 import org.fatmansoft.teach.util.DateTimeTool;
+import org.fatmansoft.teach.util.Method;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -180,7 +181,12 @@ public class TeachController {
         s.setStudentNum(studentNum);  //设置属性
         s.setStudentName(studentName);
         s.setSex(sex);
-        s.setAge(age);
+        String S = age+"";
+        if(Method.IsDouble(S)) {
+            s.setAge(age);
+        }else {
+            return CommonMethod.getReturnMessageError("请输入合法数字");
+        }
         s.setBirthday(birthday);
         studentRepository.save(s);  //新建和修改都调用save方法
         return CommonMethod.getReturnData(s.getId());  // 将记录的id返回前端

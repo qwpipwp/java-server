@@ -4,7 +4,7 @@ package org.fatmansoft.teach.controllers;
 import org.fatmansoft.teach.models.Course;
 import org.fatmansoft.teach.models.Score;
 import org.fatmansoft.teach.models.Student;
-import org.fatmansoft.teach.models.Method;
+import org.fatmansoft.teach.util.Method;
 import org.fatmansoft.teach.payload.request.DataRequest;
 import org.fatmansoft.teach.payload.response.DataResponse;
 import org.fatmansoft.teach.repository.CourseRepository;
@@ -141,7 +141,7 @@ public class ScoreController {
         if(Method.IsDouble(S)) {
             sc.setScore(score);
         }else {
-            return CommonMethod.getReturnMessageError("请输入数字");
+            return CommonMethod.getReturnMessageError("请输入合法数字");
         }
         scoreRepository.save(sc);//新建和修改都调用save方法
         return CommonMethod.getReturnData(sc.getId());
